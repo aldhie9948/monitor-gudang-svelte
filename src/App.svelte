@@ -1,18 +1,23 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
-  import { keywordSearch } from "./lib/store";
+  import CategoryItems from "./component/CategoryItems.svelte";
+  import RawMaterialContent from "./component/RawMaterialContent.svelte";
   import SearchForm from "./component/SearchForm.svelte";
   import SidebarBrand from "./component/SidebarBrand.svelte";
+  import UnderContruction from "./component/UnderContruction.svelte";
+  import { selectedCategory } from "./lib/store";
 </script>
 
-<div class="flex h-screen">
-  <div class="w-2/12 bg-slate-700 p-7">
+<div class="grid grid-cols-12 h-screen overflow-hidden">
+  <div class="col-span-2 bg-slate-700 2xl:p-7 p-5 border-r border-slate-600">
     <SidebarBrand />
-    <SearchForm />
+    <SearchForm className="mb-10" />
+    <CategoryItems />
   </div>
-  <div class="flex-grow p-7">
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint a, magni
-    temporibus quos maxime, voluptatem exercitationem at doloribus dicta fugit
-    labore aut fugiat veritatis. Odit possimus explicabo sequi illo aliquid.
+  <div class="col-span-10">
+    {#if $selectedCategory === "Raw Material"}
+      <RawMaterialContent />
+    {:else}
+      <UnderContruction />
+    {/if}
   </div>
 </div>

@@ -1,9 +1,10 @@
 <script lang="ts">
   import { keywordSearch } from "../lib/store";
   import Icon from "@iconify/svelte";
+  export let className: string;
 </script>
 
-<div>
+<div class={className}>
   <div class="flex gap-2 items-center mb-2">
     <Icon icon="mingcute:search-3-line" />
     <h1 class="flex-grow font-semibold">Pencarian</h1>
@@ -20,7 +21,7 @@
       class="text-xs btn flex items-center gap-2 flex-grow justify-center"
     >
       <Icon icon="mingcute:search-2-fill" />
-      <h1>Search</h1>
+      <h1>Cari</h1>
     </button>
     <button title="Reset pencarian" class="text-xs btn">
       <Icon icon="material-symbols:device-reset" class="text-base" />
