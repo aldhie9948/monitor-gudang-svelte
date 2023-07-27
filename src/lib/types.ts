@@ -3,6 +3,7 @@ export interface TypeBarang {
   kode: string;
   nama: string;
   jenis: string;
+  total: number;
 }
 
 export interface StokBarang {
@@ -17,3 +18,18 @@ export interface StokBarang {
 }
 
 export type StatusStock = -1 | 0 | 1;
+
+export interface HistoriStokBarang {
+  nama_barang: string;
+  gudang: string;
+  masuk: string;
+  keluar: string;
+  sisa_stok: string;
+  no_lot: string;
+  tanggal: string;
+}
+
+export interface RecordStock {
+  status: StatusStock;
+  total: number;
+}

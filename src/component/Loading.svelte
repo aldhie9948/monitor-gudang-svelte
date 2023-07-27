@@ -1,6 +1,5 @@
 <script lang="ts">
-  export const width: string | number = "1rem";
-  export const height: string | number = "1rem";
+  export const width: string = "2rem";
 </script>
 
 <div role="status">
@@ -8,7 +7,6 @@
     aria-hidden="true"
     class="mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-red-600"
     {width}
-    {height}
     viewBox="0 0 100 101"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

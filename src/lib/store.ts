@@ -13,3 +13,4 @@ export const selectedCategory = writable<string>("Raw Material");
 export const typeBarang = writable<TypeBarang[]>([]);
 export const currentTypeBarang = writable<TypeBarang>();
 export const currentStockBarang = writable<StokBarang[]>([]);
+export const stockBarangForSearch = writable<StokBarang[]>([]);

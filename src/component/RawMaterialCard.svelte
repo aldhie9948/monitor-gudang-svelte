@@ -1,39 +1,166 @@
 <script lang="ts">
-  import type { StokBarang, StatusStock } from "../lib/types";
+  import type { StokBarang, HistoriStokBarang } from "../lib/types";
+  import Icon from "@iconify/svelte";
+  import { getDetailTransaction } from "../lib/service";
+  import moment from "moment";
+  import Loading from "./Loading.svelte";
+  import getStatusStock from "../lib/statusStock";
 
   export let stock: StokBarang;
-  function statusStock(stok: number | string): StatusStock {
-    const number = typeof stok === "number" ? stok : Number(stok);
-    if (number < 10) return -1;
-    if (number > 10 && number <= 100) return 0;
-    if (number > 100) return 1;
+  let detailTransaction: Promise<HistoriStokBarang[]> = getDetailTransaction();
+  let start: string = moment().startOf("month").format("YYYY-MM-DD");
+  let end: string = moment().endOf("month").format("YYYY-MM-DD");
+
+  let isDetailShown = false;
+
+  function fetchDetailTransaction() {
+    const { kode_barang: kode } = stock;
+    const args = {
+      start: moment(start).startOf("day").toISOString(),
+      end: moment(end).endOf("day").toISOString(),
+      kode,
+    };
+
+    detailTransaction = getDetailTransaction(args);
+  }
+
+  function detailShownHandler() {
+    if (isDetailShown) return (isDetailShown = !isDetailShown);
+    fetchDetailTransaction();
+    isDetailShown = !isDetailShown;
   }
 </script>
 
 <div
-  class="bg-slate-700 mb-2 rounded w-full py-2 px-4 cursor-pointer snap-start flex items-center gap-5"
+  class="bg-slate-700 mb-2 rounded w-full 2xl:py-3 py-2 px-4 cursor-pointer snap-start"
 >
-  <div
-    class="w-8 h-8 rounded-full animate-pulse ring-2"
-    class:empty={statusStock(stock.stok) === -1}
-    class:danger={statusStock(stock.stok) === 0}
-    class:safe={statusStock(stock.stok) === 1}
-  />
-  <div>
-    <h1 class="font-bold text-lg">{stock.nama_barang}</h1>
-    <h2>Kode: {stock.kode_barang}</h2>
-    <h2>Gudang: {stock.gudang}</h2>
-  </div>
+  <button
+    on:click={detailShownHandler}
+    class="w-full text-left flex items-center gap-3 justify-between"
+  >
+    <div
+      class="w-6 h-6 rounded-full animate-pulse ring-4"
+      class:empty={getStatusStock(stock.stok) === -1}
+      class:danger={getStatusStock(stock.stok) === 0}
+      class:safe={getStatusStock(stock.stok) === 1}
+    />
+    <div class="flex-grow">
+      <h1 class="font-bold text-lg">{stock.nama_barang}</h1>
+      <h2 class="font-light text-xs">Kode: {stock.kode_barang}</h2>
+    </div>
+    <div class="text-right">
+      <h1 class="font-bold text-lg">
+        {stock.stok}
+        <sup class="uppercase text-xs">{stock.satuan || "-"}</sup>
+      </h1>
+      <h2 class="font-light text-xs">
+        {stock.gudang || "-"}
+      </h2>
+    </div>
+    <div>
+      {#if isDetailShown}
+        <Icon icon="fa-regular:times-circle" class="text-2xl" />
+      {:else}
+        <Icon icon="gg:chevron-down-o" class="text-2xl" />
+      {/if}
+    </div>
+  </button>
+
+  {#if isDetailShown}
+    <div class="my-5">
+      <div class="flex items-center gap-2 mb-3">
+        <div>
+          <h1 class="text-xs font-light">Start:</h1>
+          <input
+            bind:value={start}
+            type="date"
+            class="bg-slate-500/50 py-[0.4rem] rounded-full px-2"
+          />
+        </div>
+        <div>
+          <h1 class="text-xs font-light">End:</h1>
+          <input
+            bind:value={end}
+            type="date"
+            class="bg-slate-500/50 py-[0.4rem] rounded-full px-2"
+          />
+        </div>
+        <button
+          on:click={fetchDetailTransaction}
+          title="Cari transaksi"
+          class="btn mt-4 flex items-center gap-2 !px-7"
+        >
+          <Icon icon="material-symbols:search" />
+          <h1>Cari</h1>
+        </button>
+      </div>
+
+      {#await detailTransaction}
+        <div class="flex justify-center items-center">
+          <Loading />
+        </div>
+      {:then transaction}
+        {#if transaction.length < 1}
+          <div class="flex items-center justify-center gap-2">
+            <Icon icon="material-symbols:info-outline" />
+            <h1>Transaksi tidak tersedia.</h1>
+          </div>
+        {:else}
+          <table class="w-full">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Tanggal</th>
+                <th>In</th>
+                <th>Out</th>
+                <th>Before</th>
+                <th>Lot Material</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each transaction as item, i (i)}
+                <tr class="text-center">
+                  <td>{i + 1}</td>
+                  <td
+                    ><h1>
+                      {moment.utc(item.tanggal).format("DD/MM/YYYY")}
+                    </h1></td
+                  >
+                  <td><h1>{item.masuk}</h1></td>
+                  <td><h1>{item.keluar}</h1></td>
+                  <td><h1>{item.sisa_stok}</h1></td>
+                  <td><h1>{item.no_lot}</h1></td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        {/if}
+      {/await}
+    </div>
+  {/if}
 </div>
 
 <style>
   .empty {
-    @apply bg-red-500 ring-red-500;
+    @apply bg-red-500 ring-red-300;
   }
   .danger {
-    @apply bg-orange-500 ring-orange-500;
+    @apply bg-orange-500 ring-orange-300;
   }
   .safe {
-    @apply bg-green-500 ring-green-500;
+    @apply bg-green-500 ring-green-300;
+  }
+
+  table {
+    @apply border;
+  }
+
+  td,
+  th {
+    @apply border;
+  }
+
+  th {
+    @apply bg-slate-500/50;
   }
 </style>

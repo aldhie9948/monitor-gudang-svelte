@@ -40,3 +40,13 @@ input {
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-slate-900;
 }
+
+.empty-bg {
+  @apply bg-red-500;
+}
+.warning-bg {
+  @apply bg-orange-500;
+}
+.safe-bg {
+  @apply bg-green-500;
+}
