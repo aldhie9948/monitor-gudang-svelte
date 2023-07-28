@@ -45,15 +45,15 @@
       class:safe={getStatusStock(stock.stok) === 1}
     />
     <div class="flex-grow">
-      <h1 class="font-bold text-lg">{stock.nama_barang}</h1>
+      <h1 class="font-bold xl:text-lg">{stock.nama_barang}</h1>
       <h2 class="font-light text-xs">Kode: {stock.kode_barang}</h2>
     </div>
     <div class="text-right">
-      <h1 class="font-bold text-lg">
+      <h1 class="font-bold xl:text-lg">
         {stock.stok}
         <sup class="uppercase text-xs">{stock.satuan || "-"}</sup>
       </h1>
-      <h2 class="font-light text-xs">
+      <h2 class="font-light text-xs xl:block hidden">
         {stock.gudang || "-"}
       </h2>
     </div>
@@ -68,7 +68,9 @@
 
   {#if isDetailShown}
     <div class="my-5">
-      <div class="flex items-center gap-2 mb-3">
+      <div
+        class="flex items-center xl:justify-start justify-center gap-2 mb-3 flex-wrap"
+      >
         <div>
           <h1 class="text-xs font-light">Start:</h1>
           <input
@@ -88,7 +90,7 @@
         <button
           on:click={fetchDetailTransaction}
           title="Cari transaksi"
-          class="btn mt-4 flex items-center gap-2 !px-7"
+          class="btn xl:mt-4 flex items-center gap-2 !px-7"
         >
           <Icon icon="material-symbols:search" />
           <h1>Cari</h1>
@@ -106,52 +108,54 @@
             <h1>Transaksi tidak tersedia.</h1>
           </div>
         {:else}
-          <table class="w-full">
-            <thead>
-              <tr>
-                <th>No.</th>
-                <th>Tanggal</th>
-                <th>Stok Awal</th>
-                <th>In</th>
-                <th>Out</th>
-                <th>Stok Akhir</th>
-                <th>Lot Material</th>
-              </tr>
-            </thead>
-            <tbody>
-              {#each transaction as item, i (i)}
-                <tr class="text-center">
-                  <td>{i + 1}</td>
-                  <td
-                    ><h1>
-                      {moment.utc(item.tanggal).format("DD/MM/YYYY")}
-                    </h1></td
-                  >
-                  <td><h1>{item.sisa_stok}</h1></td>
-                  <td class:stokMasuk={parseFloat(item.masuk) > 0}
-                    ><h1>
-                      {parseFloat(item.masuk) < 1 ? "-" : item.masuk}
-                    </h1></td
-                  >
-                  <td class:stokKeluar={parseFloat(item.keluar) > 0}
-                    ><h1>
-                      {parseFloat(item.keluar) < 1 ? "-" : item.keluar}
-                    </h1></td
-                  >
-                  <td
-                    ><h1>
-                      {(
-                        parseFloat(item.sisa_stok) +
-                        parseFloat(item.masuk) -
-                        parseFloat(item.keluar)
-                      ).toFixed(2)}
-                    </h1></td
-                  >
-                  <td><h1>{item.no_lot}</h1></td>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Tanggal</th>
+                  <th>Stok Awal</th>
+                  <th>In</th>
+                  <th>Out</th>
+                  <th>Stok Akhir</th>
+                  <th>Lot Material</th>
                 </tr>
-              {/each}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {#each transaction as item, i (i)}
+                  <tr class="text-center">
+                    <td>{i + 1}</td>
+                    <td
+                      ><h1>
+                        {moment.utc(item.tanggal).format("DD/MM/YYYY")}
+                      </h1></td
+                    >
+                    <td><h1>{item.sisa_stok}</h1></td>
+                    <td class:stokMasuk={parseFloat(item.masuk) > 0}
+                      ><h1>
+                        {parseFloat(item.masuk) < 1 ? "-" : item.masuk}
+                      </h1></td
+                    >
+                    <td class:stokKeluar={parseFloat(item.keluar) > 0}
+                      ><h1>
+                        {parseFloat(item.keluar) < 1 ? "-" : item.keluar}
+                      </h1></td
+                    >
+                    <td
+                      ><h1>
+                        {(
+                          parseFloat(item.sisa_stok) +
+                          parseFloat(item.masuk) -
+                          parseFloat(item.keluar)
+                        ).toFixed(2)}
+                      </h1></td
+                    >
+                    <td><h1>{item.no_lot}</h1></td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </div>
         {/if}
       {/await}
     </div>
@@ -170,7 +174,7 @@
   }
 
   table {
-    @apply border;
+    @apply border whitespace-nowrap;
   }
 
   td,

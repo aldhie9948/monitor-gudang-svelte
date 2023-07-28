@@ -34,7 +34,7 @@
 
 <div class="p-7">
   <div class="border-b-2 border-slate-500/20 mb-3">
-    <div class="flex justify-around">
+    <div class="flex justify-around flex-wrap">
       {#each $typeBarang as type}
         <button
           on:click={() => typeHandleClick(type)}
@@ -50,15 +50,19 @@
       {/each}
     </div>
   </div>
-  <div class="h-[88vh]">
-    <div class="grid grid-cols-12 gap-2 2xl:w-10/12 2xl:mx-auto">
+  <div class="xl:h-[88vh]">
+    <div class="grid xl:grid-cols-12 grid-cols-1 gap-2 2xl:w-10/12 2xl:mx-auto">
       {#await promise}
-        <div class="col-span-8 h-[80vh] flex justify-center items-center">
+        <div
+          class="xl:col-span-8 xl:h-[80vh] flex justify-center items-center xl:order-first order-last"
+        >
           <Loading />
           <h1>Loading</h1>
         </div>
       {:then stocks}
-        <div class="col-span-8 overflow-y-auto h-[88vh] pr-2 snap-y">
+        <div
+          class="xl:col-span-8 overflow-y-auto xl:h-[88vh] xl:pr-2 snap-y xl:order-first order-last"
+        >
           {#each stocks as stock}
             <RawMaterialCard {stock} />
           {/each}
@@ -71,7 +75,7 @@
         </div>
       {/await}
 
-      <div class="col-span-4">
+      <div class="xl:col-span-4">
         <div class="mb-3">
           <h1 class="text-3xl font-bold">{$currentTypeBarang?.nama}</h1>
           <div class="grid grid-cols-2 font-light">
