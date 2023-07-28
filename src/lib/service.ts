@@ -5,7 +5,10 @@ import type {
   TypeBarang,
   DetailTransactionParams,
 } from "./types";
-const ENDPOINT = "http://localhost:3005/api/monitor";
+const ENDPOINT =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3005/api/monitor"
+    : "http://192.168.10.19:3005/api/monitor";
 
 export async function getTypeBarang(): Promise<TypeBarang[]> {
   const {
