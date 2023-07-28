@@ -27,9 +27,17 @@ export interface HistoriStokBarang {
   sisa_stok: string;
   no_lot: string;
   tanggal: string;
+  kode_barang: string;
 }
 
 export interface RecordStock {
   status: StatusStock;
   total: number;
+}
+
+export interface DetailTransactionParams {
+  kode: string;
+  start: string;
+  end: string;
+  limit?: number;
 }

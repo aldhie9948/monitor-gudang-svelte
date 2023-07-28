@@ -8,7 +8,7 @@
 </script>
 
 <div
-  class="w-full bg-slate-700 rounded-full h-5 overflow-hidden flex-grow mb-3"
+  class="w-full bg-slate-700 rounded-full 2xl:h-5 h-4 overflow-hidden flex-grow 2xl:mb-3 mb-2"
 >
   <div
     class="h-full {className} relative rounded-full"

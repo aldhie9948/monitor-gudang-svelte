@@ -1,12 +1,11 @@
 import axios from "axios";
-import type { HistoriStokBarang, StokBarang, TypeBarang } from "./types";
-const ENDPOINT = "http://localhost:3005/api/stok-barang";
-
-interface DetailTransactionParams {
-  kode: string;
-  start: string;
-  end: string;
-}
+import type {
+  HistoriStokBarang,
+  StokBarang,
+  TypeBarang,
+  DetailTransactionParams,
+} from "./types";
+const ENDPOINT = "http://localhost:3005/api/monitor";
 
 export async function getTypeBarang(): Promise<TypeBarang[]> {
   const {
@@ -24,7 +23,7 @@ export async function getStockByType(type?: string): Promise<StokBarang[]> {
   });
   const {
     data: { data, status },
-  } = await axios.get(`${ENDPOINT}/monitor?${params.toString()}`);
+  } = await axios.get(`${ENDPOINT}?${params.toString()}`);
   if (status === "OK") return data;
   console.error(data);
   throw new Error(data);
@@ -36,7 +35,7 @@ export async function getDetailTransaction(
   if (args === undefined) return Promise.resolve([]);
   const {
     data: { data, status },
-  } = await axios.post(`${ENDPOINT}/monitor`, args);
+  } = await axios.post(ENDPOINT, args);
   if (status === "OK") return data;
   console.log(data);
   throw new Error(data);

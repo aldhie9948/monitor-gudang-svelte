@@ -5,12 +5,13 @@
   import {
     currentStockBarang,
     currentTypeBarang,
-    typeBarang,
     stockBarangForSearch,
+    typeBarang,
   } from "../lib/store";
-  import type { RecordStock, StokBarang, TypeBarang } from "../lib/types";
-  import RawMaterialCard from "./RawMaterialCard.svelte";
+  import type { StokBarang, TypeBarang } from "../lib/types";
+  import LatestTransaction from "./LatestTransaction.svelte";
   import Loading from "./Loading.svelte";
+  import RawMaterialCard from "./RawMaterialCard.svelte";
   import StatusStokBarang from "./StatusStokBarang.svelte";
 
   let promise: Promise<StokBarang[]> = getStockByType();
@@ -79,16 +80,7 @@
           </div>
         </div>
         <StatusStokBarang />
-        <div class="rounded-lg bg-slate-900 p-5">
-          <h1 class="uppercase font-bold">Transaksi Terbaru</h1>
-          <hr class="border-slate-500/50 my-2" />
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-            error fuga cupiditate, quasi necessitatibus reiciendis ad
-            perspiciatis perferendis blanditiis expedita repellendus totam
-            fugiat qui modi distinctio quas voluptates aliquid dolor.
-          </p>
-        </div>
+        <LatestTransaction />
       </div>
     </div>
   </div>

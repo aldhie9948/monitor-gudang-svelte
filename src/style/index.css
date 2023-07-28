@@ -41,12 +41,12 @@ input {
   @apply bg-slate-900;
 }
 
-.empty-bg {
+.emptybg {
   @apply bg-red-500;
 }
-.warning-bg {
+.warningbg {
   @apply bg-orange-500;
 }
-.safe-bg {
+.safebg {
   @apply bg-green-500;
 }

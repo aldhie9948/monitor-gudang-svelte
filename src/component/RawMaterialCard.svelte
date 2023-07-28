@@ -111,9 +111,10 @@
               <tr>
                 <th>No.</th>
                 <th>Tanggal</th>
+                <th>Stok Awal</th>
                 <th>In</th>
                 <th>Out</th>
-                <th>Before</th>
+                <th>Stok Akhir</th>
                 <th>Lot Material</th>
               </tr>
             </thead>
@@ -126,9 +127,26 @@
                       {moment.utc(item.tanggal).format("DD/MM/YYYY")}
                     </h1></td
                   >
-                  <td><h1>{item.masuk}</h1></td>
-                  <td><h1>{item.keluar}</h1></td>
                   <td><h1>{item.sisa_stok}</h1></td>
+                  <td class:stokMasuk={parseFloat(item.masuk) > 0}
+                    ><h1>
+                      {parseFloat(item.masuk) < 1 ? "-" : item.masuk}
+                    </h1></td
+                  >
+                  <td class:stokKeluar={parseFloat(item.keluar) > 0}
+                    ><h1>
+                      {parseFloat(item.keluar) < 1 ? "-" : item.keluar}
+                    </h1></td
+                  >
+                  <td
+                    ><h1>
+                      {(
+                        parseFloat(item.sisa_stok) +
+                        parseFloat(item.masuk) -
+                        parseFloat(item.keluar)
+                      ).toFixed(2)}
+                    </h1></td
+                  >
                   <td><h1>{item.no_lot}</h1></td>
                 </tr>
               {/each}
@@ -162,5 +180,13 @@
 
   th {
     @apply bg-slate-500/50;
+  }
+
+  .stokMasuk {
+    @apply bg-green-500/50;
+  }
+
+  .stokKeluar {
+    @apply bg-red-500/50;
   }
 </style>
