@@ -4,11 +4,11 @@
 </script>
 
 <div>
-  <div class="flex items-center gap-2 mb-2">
+  <div class="xl:flex hidden items-center gap-2 mb-2">
     <Icon icon="iconamoon:category-light" />
     <h1 class="font-semibold">Kategori</h1>
   </div>
-  <div class="ml-5">
+  <div class="xl:ml-5">
     {#each $categoryItems as category}
       <button
         on:click={() => ($selectedCategory = category)}

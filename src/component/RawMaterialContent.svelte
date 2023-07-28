@@ -67,7 +67,9 @@
             <RawMaterialCard {stock} />
           {/each}
           {#if stocks.length < 1}
-            <div class="flex items-center justify-center gap-2 h-[80vh]">
+            <div
+              class="flex items-center justify-center gap-2 xl:h-[80vh] h-[50vh]"
+            >
               <Icon icon="material-symbols:info-outline" class="text-xl" />
               <h1>Barang tidak tersedia untuk kategori tersebut.</h1>
             </div>
