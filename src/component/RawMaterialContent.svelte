@@ -14,11 +14,11 @@
   import RawMaterialCard from "./RawMaterialCard.svelte";
   import StatusStokBarang from "./StatusStokBarang.svelte";
 
-  let promise: Promise<StokBarang[]> = getStockByType();
+  let promise: Promise<StokBarang[]> = Promise.resolve([]);
 
   async function typeHandleClick(type: TypeBarang) {
     $currentTypeBarang = type;
-    promise = getStockByType(type.nama);
+    promise = getStockByType(type.kode);
     $currentStockBarang = await promise;
     $stockBarangForSearch = await promise;
   }

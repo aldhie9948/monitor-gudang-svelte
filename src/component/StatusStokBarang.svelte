@@ -33,7 +33,7 @@
     });
   }
 
-  $: getStockByType($currentTypeBarang?.nama).then((res) => (stokBarang = res));
+  $: getStockByType($currentTypeBarang?.kode).then((res) => (stokBarang = res));
 </script>
 
 <div class="rounded-lg bg-slate-900 2xl:p-7 p-5 mb-3">

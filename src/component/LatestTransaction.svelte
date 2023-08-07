@@ -13,7 +13,7 @@
 
   $: {
     args = {
-      kode: $currentTypeBarang?.nama,
+      kode: $currentTypeBarang?.kode,
       start: moment().startOf("month").toISOString(),
       end: moment().endOf("month").toISOString(),
       limit: 3,

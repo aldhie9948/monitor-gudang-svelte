@@ -7,14 +7,16 @@ export interface TypeBarang {
 }
 
 export interface StokBarang {
-  active: string;
-  gudang: string;
-  kategori: string;
   kode_barang: string;
   nama_barang: string;
   satuan: string;
-  stok: string;
+  kategori: string;
   tipe_barang: string;
+  gudang: string;
+  active: string;
+  stok: string;
+  kode_tipe: string;
+  nama_tipe: string;
 }
 
 export type StatusStock = -1 | 0 | 1;
@@ -22,12 +24,13 @@ export type StatusStock = -1 | 0 | 1;
 export interface HistoriStokBarang {
   nama_barang: string;
   gudang: string;
+  kode_barang: string;
   masuk: string;
   keluar: string;
   sisa_stok: string;
   no_lot: string;
   tanggal: string;
-  kode_barang: string;
+  id: number;
 }
 
 export interface RecordStock {

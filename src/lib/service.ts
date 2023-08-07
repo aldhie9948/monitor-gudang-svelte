@@ -13,7 +13,7 @@ const ENDPOINT =
 export async function getTypeBarang(): Promise<TypeBarang[]> {
   const {
     data: { status, data },
-  } = await axios(`${ENDPOINT}/tipe-barang`);
+  } = await axios.get(`${ENDPOINT}/tipe-barang`);
   if (status === "OK") return data;
   console.error(data);
   throw new Error(data);
