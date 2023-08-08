@@ -7,7 +7,7 @@
   import getStatusStock from "../lib/statusStock";
 
   export let stock: StokBarang;
-  let detailTransaction: Promise<HistoriStokBarang[]> = getDetailTransaction();
+  let detailTransaction: Promise<HistoriStokBarang[]> = Promise.resolve([]);
   let start: string = moment().startOf("month").format("YYYY-MM-DD");
   let end: string = moment().endOf("month").format("YYYY-MM-DD");
 

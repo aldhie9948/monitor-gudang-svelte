@@ -1,8 +1,8 @@
 <script lang="ts">
-  import moment from "moment";
-  import { getDetailTransaction } from "../lib/service";
-  import { currentTypeBarang } from "../lib/store";
   import Icon from "@iconify/svelte";
+  import moment from "moment";
+  import { getLatestTransaction } from "../lib/service";
+  import { currentTypeBarang } from "../lib/store";
   import type {
     DetailTransactionParams,
     HistoriStokBarang,
@@ -12,13 +12,9 @@
   let latestTransaction: Promise<HistoriStokBarang[]> = Promise.resolve([]);
 
   $: {
-    args = {
-      kode: $currentTypeBarang?.kode,
-      start: moment().startOf("month").toISOString(),
-      end: moment().endOf("month").toISOString(),
-      limit: 3,
-    };
-    latestTransaction = getDetailTransaction(args);
+    const kode = $currentTypeBarang?.kode;
+    const limit = 3;
+    if (kode) latestTransaction = getLatestTransaction(kode, limit);
   }
 </script>
 
