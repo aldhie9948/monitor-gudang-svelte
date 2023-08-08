@@ -7,7 +7,7 @@ import type {
 } from "./types";
 const ENDPOINT =
   import.meta.env.MODE === "development"
-    ? "http://localhost:5000/api/monitor"
+    ? "http://localhost:3005/api/monitor"
     : "http://192.168.10.19:3005/api/monitor";
 
 export async function getTypeBarang(): Promise<TypeBarang[]> {
