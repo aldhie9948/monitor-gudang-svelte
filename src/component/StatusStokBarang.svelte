@@ -36,7 +36,7 @@
   $: getStockByType($currentTypeBarang?.kode).then((res) => (stokBarang = res));
 </script>
 
-<div class="rounded-lg bg-slate-900 2xl:p-7 p-5 mb-3">
+<div class="rounded-lg bg-slate-900 2xl:p-7 p-5">
   <h1 class="uppercase font-bold">Status Stok Barang</h1>
   <hr class="border-slate-500/50 2xl:my-3 my-1" />
   <div class="my-2">

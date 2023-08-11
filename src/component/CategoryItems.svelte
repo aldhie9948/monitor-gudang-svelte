@@ -1,6 +1,13 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import { categoryItems, selectedCategory } from "../lib/store";
+  import { categoryItems, selectedCategory } from "@lib/store";
+  import { navigate } from "svelte-routing";
+  function categoryHandler(category: string) {
+    $selectedCategory = category;
+    let pathname = category.toLowerCase().replace(" ", "-");
+    if (pathname === "raw-material") pathname = "/";
+    navigate(pathname, { replace: true });
+  }
 </script>
 
 <div>
@@ -11,7 +18,7 @@
   <div class="xl:ml-5">
     {#each $categoryItems as category}
       <button
-        on:click={() => ($selectedCategory = category)}
+        on:click={() => categoryHandler(category)}
         class:active={$selectedCategory === category}
         class="flex gap-2 items-center mb-2 duration-200 hover:text-red-500 active:text-red-700 focus:text-red-500"
       >

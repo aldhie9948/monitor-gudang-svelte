@@ -40,8 +40,8 @@ export async function getDetailTransaction(
     data: { data, status },
   } = await axios.post(ENDPOINT, args);
   if (status === "OK") return data;
-  console.log(data);
-  throw new Error(data);
+  console.error(data);
+  return Promise.reject(data);
 }
 
 export async function getLatestTransaction(
@@ -56,6 +56,6 @@ export async function getLatestTransaction(
     data: { data, status },
   } = await axios.get(ENDPOINT + "/terbaru?" + params.toString());
   if (status === "OK") return data;
-  console.log(data);
-  throw new Error(data);
+  console.error(data);
+  return Promise.reject(data);
 }

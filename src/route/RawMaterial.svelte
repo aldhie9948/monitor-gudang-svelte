@@ -1,18 +1,18 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
   import { onMount } from "svelte";
-  import { getStockByType, getTypeBarang } from "../lib/service";
+  import { getStockByType, getTypeBarang } from "@lib/service";
   import {
     currentStockBarang,
     currentTypeBarang,
     stockBarangForSearch,
     typeBarang,
-  } from "../lib/store";
+  } from "@lib/store";
   import type { StokBarang, TypeBarang } from "../lib/types";
-  import LatestTransaction from "./LatestTransaction.svelte";
-  import Loading from "./Loading.svelte";
-  import RawMaterialCard from "./RawMaterialCard.svelte";
-  import StatusStokBarang from "./StatusStokBarang.svelte";
+  import LatestTransaction from "@component/LatestTransaction.svelte";
+  import Loading from "@component/Loading.svelte";
+  import RawMaterialCard from "@component/RawMaterialCard.svelte";
+  import StatusStokBarang from "@component/StatusStokBarang.svelte";
 
   let promise: Promise<StokBarang[]> = Promise.resolve([]);
 
@@ -25,8 +25,7 @@
 
   onMount(async () => {
     $typeBarang = await getTypeBarang();
-    $currentTypeBarang = $currentTypeBarang ?? $typeBarang[0];
-    typeHandleClick($currentTypeBarang);
+    typeHandleClick($typeBarang[0]);
   });
 
   $: promise = Promise.resolve($currentStockBarang);
@@ -85,8 +84,10 @@
             <h1>Jenis : {$currentTypeBarang?.jenis}</h1>
           </div>
         </div>
-        <StatusStokBarang />
-        <LatestTransaction />
+        <div class="grid xl:grid-cols-1 grid-cols-2 gap-2">
+          <StatusStokBarang />
+          <LatestTransaction />
+        </div>
       </div>
     </div>
   </div>

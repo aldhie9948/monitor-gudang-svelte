@@ -27,6 +27,8 @@
     "@iconify/svelte": "^3.1.4",
     "axios": "^1.4.0",
     "lodash": "^4.17.21",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "path": "^0.12.7",
+    "svelte-routing": "^2.0.0"
   }
 }
