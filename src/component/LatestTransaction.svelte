@@ -1,12 +1,9 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
   import moment from "moment";
-  import { getLatestTransaction } from "../lib/service";
-  import { currentTypeBarang } from "../lib/store";
-  import type {
-    DetailTransactionParams,
-    HistoriStokBarang,
-  } from "../lib/types";
+  import { getRawMaterialLatestTransaction } from "@lib/service";
+  import { currentTypeBarang } from "@lib/store";
+  import type { DetailTransactionParams, HistoriStokBarang } from "@lib/types";
   import Loading from "./Loading.svelte";
   let args: DetailTransactionParams;
   let latestTransaction: Promise<HistoriStokBarang[]> = Promise.resolve([]);
@@ -14,7 +11,7 @@
   $: {
     const kode = $currentTypeBarang?.kode;
     const limit = 3;
-    if (kode) latestTransaction = getLatestTransaction(kode, limit);
+    if (kode) latestTransaction = getRawMaterialLatestTransaction(kode, limit);
   }
 </script>
 

@@ -4,15 +4,17 @@
   import Sidebar from "./component/Sidebar.svelte";
   import NotFound from "@route/NotFound.svelte";
   import MaterialCust from "@route/MaterialCust.svelte";
+  import Home from "@route/Home.svelte";
   let url = "";
   let basepath = import.meta.env.DEV ? "/" : "/monitor-gudang";
 </script>
 
 <div class="xl:grid xl:grid-cols-12 h-screen xl:overflow-hidden">
   <Sidebar />
-  <div class="xl:col-span-10 xl:mt-0 mt-10">
+  <div class="xl:col-span-10 xl:pt-0 md:pt-20">
     <Router {url} {basepath}>
-      <Route path="/" component={RawMaterial} />
+      <Route path="/" component={Home} />
+      <Route path="/raw-material" component={RawMaterial} />
       <Route path="/press" component={NotFound} />
       <Route path="/tooling" component={NotFound} />
       <Route path="/wip" component={NotFound} />

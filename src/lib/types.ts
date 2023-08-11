@@ -1,4 +1,4 @@
-export interface TypeBarang {
+export interface ITypeBarang {
   id_tipe: number;
   kode: string;
   nama: string;
@@ -6,7 +6,7 @@ export interface TypeBarang {
   total: number;
 }
 
-export interface StokBarang {
+export interface IStokBarang {
   kode_barang: string;
   nama_barang: string;
   satuan: string;
@@ -19,9 +19,30 @@ export interface StokBarang {
   nama_tipe: string;
 }
 
+export interface IMaterialCust {
+  kode_barang: string;
+  nama_barang: string;
+  satuan: string;
+  kategori: string;
+  tipe_barang: string;
+  gudang: string;
+  stok: string;
+  harga_beli: string;
+  qrcode: string;
+  active: string;
+}
+
+export function isIStokBarang(obj: object): obj is IStokBarang {
+  return (obj as IStokBarang).kode_tipe !== undefined;
+}
+
+export function isIMaterialCust(obj: object): obj is IMaterialCust {
+  return (obj as IMaterialCust).qrcode !== undefined;
+}
+
 export type StatusStock = -1 | 0 | 1;
 
-export interface HistoriStokBarang {
+export interface IHistoriStokBarang {
   nama_barang: string;
   gudang: string;
   kode_barang: string;
@@ -33,12 +54,12 @@ export interface HistoriStokBarang {
   id: number;
 }
 
-export interface RecordStock {
+export interface IRecordStock {
   status: StatusStock;
   total: number;
 }
 
-export interface DetailTransactionParams {
+export interface IDetailTransactionParams {
   kode: string;
   start: string;
   end: string;

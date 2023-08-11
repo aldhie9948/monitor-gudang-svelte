@@ -3,24 +3,45 @@
   import {
     currentStockBarang,
     keywordSearch,
-    stockBarangForSearch,
-  } from "../lib/store";
+    itemsForSearchForm,
+    currentMaterialCust,
+  } from "@lib/store";
+  import {
+    isIStokBarang,
+    type IMaterialCust,
+    type IStokBarang,
+    isIMaterialCust,
+  } from "@lib/types";
+
   export let className: string;
 
+  function findKeyword<T>(items: T[], field: string): T[] {
+    return items.filter((item) =>
+      item[field].includes($keywordSearch.toLowerCase())
+    );
+  }
+
   function searchHandler() {
-    if ($keywordSearch === "") return;
-    const searchStock = $stockBarangForSearch.filter((stock) => {
-      if (
-        stock.kode_barang.toLowerCase().includes($keywordSearch.toLowerCase())
-      )
-        return true;
-    });
-    $currentStockBarang = searchStock;
+    if (isIStokBarang($itemsForSearchForm[0])) {
+      $currentStockBarang = findKeyword(
+        <IStokBarang[]>$itemsForSearchForm,
+        "kode_barang"
+      );
+    } else if (isIMaterialCust($itemsForSearchForm[0])) {
+      $currentMaterialCust = findKeyword(
+        <IMaterialCust[]>$itemsForSearchForm,
+        "kode_barang"
+      );
+    }
   }
 
   function resetHandler() {
     $keywordSearch = "";
-    $currentStockBarang = $stockBarangForSearch;
+    if (isIStokBarang($itemsForSearchForm[0])) {
+      $currentStockBarang = <IStokBarang[]>$itemsForSearchForm;
+    } else if (isIMaterialCust($itemsForSearchForm[0])) {
+      $currentMaterialCust = <IMaterialCust[]>$itemsForSearchForm;
+    }
   }
 </script>
 
@@ -38,6 +59,7 @@
     bind:value={$keywordSearch}
     class="w-full bg-slate-800 rounded-full px-4 xl:py-2 py-1.5 text-sm duration-200 placeholder:text-xs focus:bg-slate-900 xl:mb-2 xl:mx-0 mx-2"
     placeholder="Kode barang"
+    required={true}
   />
   <div class="flex gap-2 items-center">
     <button

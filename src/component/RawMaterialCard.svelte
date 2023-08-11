@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { StokBarang, HistoriStokBarang } from "../lib/types";
+  import type { StokBarang, HistoriStokBarang } from "@lib/types";
   import Icon from "@iconify/svelte";
-  import { getDetailTransaction } from "../lib/service";
+  import { getRawMaterialDetailTransaction } from "@lib/service";
   import moment from "moment";
   import Loading from "./Loading.svelte";
-  import getStatusStock from "../lib/statusStock";
+  import getStatusStock from "@lib/statusStock";
 
   export let stock: StokBarang;
   let detailTransaction: Promise<HistoriStokBarang[]> = Promise.resolve([]);
@@ -21,7 +21,7 @@
       kode,
     };
 
-    detailTransaction = getDetailTransaction(args);
+    detailTransaction = getRawMaterialDetailTransaction(args);
   }
 
   function detailShownHandler() {

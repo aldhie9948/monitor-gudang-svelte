@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import type { RecordStock, StatusStock, StokBarang } from "../lib/types";
-  import { getStockByType } from "../lib/service";
-  import { currentTypeBarang } from "../lib/store";
-  import getStatusStock from "../lib/statusStock";
-  import { tweened } from "svelte/motion";
+  import { getRawMaterialStockByType } from "@lib/service";
+  import getStatusStock from "@lib/statusStock";
+  import { currentTypeBarang } from "@lib/store";
+  import type { StatusStock, StokBarang } from "@lib/types";
   import { cubicOut } from "svelte/easing";
+  import { tweened } from "svelte/motion";
   import ProgressBar from "./ProgressBar.svelte";
 
   let stokBarang: StokBarang[] = [];
@@ -33,7 +32,9 @@
     });
   }
 
-  $: getStockByType($currentTypeBarang?.kode).then((res) => (stokBarang = res));
+  $: getRawMaterialStockByType($currentTypeBarang?.kode).then(
+    (res) => (stokBarang = res)
+  );
 </script>
 
 <div class="rounded-lg bg-slate-900 2xl:p-7 p-5">

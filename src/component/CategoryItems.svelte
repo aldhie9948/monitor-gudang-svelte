@@ -1,12 +1,16 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
   import { categoryItems, selectedCategory } from "@lib/store";
-  import { navigate } from "svelte-routing";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+
   function categoryHandler(category: string) {
     $selectedCategory = category;
     let pathname = category.toLowerCase().replace(" ", "-");
-    if (pathname === "raw-material") pathname = "/";
-    navigate(pathname, { replace: true });
+    dispatch("close", {
+      pathname,
+    });
   }
 </script>
 

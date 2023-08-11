@@ -1,11 +1,16 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
+  import { navigate } from "svelte-routing";
   import { slide } from "svelte/transition";
   import CategoryItems from "./CategoryItems.svelte";
   import SearchForm from "./SearchForm.svelte";
   import SidebarBrand from "./SidebarBrand.svelte";
 
   let categoryShown: boolean = false;
+  function close(event: CustomEvent) {
+    categoryShown = !categoryShown;
+    navigate(event.detail.pathname, { replace: true });
+  }
 </script>
 
 <div
@@ -13,7 +18,7 @@
 >
   <SidebarBrand />
   <SearchForm className="mb-10" />
-  <CategoryItems />
+  <CategoryItems on:close={close} />
 </div>
 
 <div
@@ -35,7 +40,7 @@
         transition:slide
         class="absolute bg-slate-500 whitespace-nowrap right-0 top-10 p-3 rounded"
       >
-        <CategoryItems />
+        <CategoryItems on:close={close} />
       </div>
     {/if}
   </div>
