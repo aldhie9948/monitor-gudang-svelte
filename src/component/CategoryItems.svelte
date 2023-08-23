@@ -1,16 +1,26 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
   import { categoryItems, selectedCategory } from "@lib/store";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   const dispatch = createEventDispatcher();
-
   function categoryHandler(category: string) {
     $selectedCategory = category;
     let pathname = category.toLowerCase().replace(" ", "-");
     dispatch("close", {
       pathname,
     });
+  }
+
+  $: {
+    const pathname = window.location.pathname;
+    const currentItem = $categoryItems.find((item) => {
+      const slug = item.toLowerCase().replace(" ", "-");
+      const regex = new RegExp(slug, "gi");
+      return regex.test(pathname);
+    });
+
+    if (currentItem) $selectedCategory = currentItem;
   }
 </script>
 

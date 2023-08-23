@@ -1,8 +1,8 @@
 <script lang="ts">
-  import LatestTransaction from "@component/LatestTransaction.svelte";
   import Loading from "@component/Loading.svelte";
-  import RawMaterialCard from "@component/RawMaterialCard.svelte";
-  import StatusStokBarang from "@component/StatusStokBarang.svelte";
+  import LatestTransaction from "@component/raw-material/LatestTransaction.svelte";
+  import RawMaterialCard from "@component/raw-material/RawMaterialCard.svelte";
+  import StatusStokBarang from "@component/raw-material/StatusStokBarang.svelte";
   import Icon from "@iconify/svelte";
   import { getRawMaterialStockByType, getTypeBarang } from "@lib/service";
   import {
@@ -17,26 +17,26 @@
   let promise: Promise<IStokBarang[]> = Promise.resolve([]);
   let parent: HTMLElement;
 
-  async function typeHandleClick(type: ITypeBarang) {
+  function typeHandleClick(type: ITypeBarang) {
     $currentTypeBarang = type;
     promise = getRawMaterialStockByType(type.kode);
-    $currentStockBarang = await promise;
-    $itemsForSearchForm = await promise;
+    $currentStockBarang = promise;
+    promise.then((data) => ($itemsForSearchForm = data));
   }
 
   onMount(async () => {
     $typeBarang = await getTypeBarang();
     typeHandleClick($typeBarang[0]);
   });
-
   $: {
-    promise = Promise.resolve($currentStockBarang);
+    promise = $currentStockBarang;
     if (promise && parent)
       parent.style.height = window.innerHeight - (parent.offsetTop + 20) + "px";
   }
 </script>
 
-<div class="px-7 xl:py-3">
+<div class="sm:px-7 px-3 xl:py-3">
+  <!-- Kategori Tab -->
   <div class="border-b-2 border-slate-500/20 mb-3">
     <div class="flex justify-around flex-wrap">
       {#each $typeBarang as type}
@@ -54,19 +54,21 @@
       {/each}
     </div>
   </div>
+  <!-- End of Kategori Tab -->
 
-  <div class="grid xl:grid-cols-12 grid-cols-1 gap-2 2xl:w-10/12 2xl:mx-auto">
+  <!-- Content -->
+  <div class="grid xl:grid-cols-12 grid-cols-1 gap-2">
     <div
       bind:this={parent}
-      class="xl:col-span-8 overflow-y-auto xl:order-first order-last"
+      class="xl:col-span-8 overflow-y-auto lg:order-first md:order-last"
     >
       {#await promise}
-        <div class="flex justify-center items-center xl:order-first order-last">
+        <div class="flex justify-center items-center h-full">
           <Loading />
           <h1>Loading</h1>
         </div>
       {:then stocks}
-        <div class="overflow-y-auto xl:pr-2 snap-y xl:order-first order-last">
+        <div class="overflow-y-auto xl:pr-2 snap-y">
           {#each stocks as stock}
             <RawMaterialCard {stock} />
           {/each}
@@ -90,12 +92,13 @@
           <h1>Jenis : {$currentTypeBarang?.jenis}</h1>
         </div>
       </div>
-      <div class="grid xl:grid-cols-1 grid-cols-2 gap-2">
+      <div class="grid xl:grid-cols-1 md:grid-cols-2 grid-cols-1 gap-2">
         <StatusStokBarang />
         <LatestTransaction />
       </div>
     </div>
   </div>
+  <!-- End of Content -->
 </div>
 
 <style>

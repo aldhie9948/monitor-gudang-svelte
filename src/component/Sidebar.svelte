@@ -13,6 +13,7 @@
   }
 </script>
 
+<!-- Sidebar -->
 <div
   class="col-span-2 bg-slate-700 2xl:p-7 p-5 border-r border-slate-600 xl:block hidden"
 >
@@ -20,7 +21,9 @@
   <SearchForm className="mb-10" />
   <CategoryItems on:close={close} />
 </div>
+<!-- End of  Sidebar -->
 
+<!-- Mobile Navbar -->
 <div
   class="bg-slate-700 px-7 py-3 flex items-center justify-between fixed top-0 inset-x-0 z-10 xl:hidden gap-2 shadow-sidebar"
 >
@@ -45,6 +48,8 @@
     {/if}
   </div>
 </div>
+
+<!-- End of Mobile Navbar -->
 
 <style>
   .shadow-sidebar {

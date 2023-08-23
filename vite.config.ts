@@ -12,4 +12,5 @@ export default defineConfig({
       "@route": path.resolve("./src/route"),
     },
   },
+  base: "./",
 });

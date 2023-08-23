@@ -32,6 +32,8 @@ export interface IMaterialCust {
   active: string;
 }
 
+export type ItemsForSearch = IStokBarang[] | IMaterialCust[];
+
 export function isIStokBarang(obj: object): obj is IStokBarang {
   return (obj as IStokBarang).kode_tipe !== undefined;
 }
@@ -64,4 +66,16 @@ export interface IDetailTransactionParams {
   start: string;
   end: string;
   limit?: number;
+}
+
+export interface IBomAllLevel1 {
+  id: string;
+  jenis_barang: string;
+  kode_material: string;
+  material: string;
+  satuan: string;
+  kode_barang: string;
+  bruto: string;
+  nama_barang: string;
+  hasil_pcs: string;
 }

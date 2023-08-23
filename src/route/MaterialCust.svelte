@@ -1,17 +1,31 @@
 <script lang="ts">
   import Loading from "@component/Loading.svelte";
+  import Card from "@component/material-cust/Card.svelte";
+  import Information from "@component/material-cust/Information.svelte";
   import Icon from "@iconify/svelte";
   import { getMaterialCustItems } from "@lib/service";
+  import { currentMaterialCust, itemsForSearchForm } from "@lib/store";
   import type { IMaterialCust } from "@lib/types";
   import { onMount } from "svelte";
-  import { blur } from "svelte/transition";
+
   let promise: Promise<IMaterialCust[]> = Promise.resolve([]);
   let parent: HTMLElement;
+  let information: IMaterialCust[] = [];
+
   $: if (promise && parent) {
     parent.style.height = window.innerHeight - (parent.offsetTop + 20) + "px";
   }
-  onMount(() => {
+
+  $: promise = $currentMaterialCust;
+
+  onMount(async () => {
     promise = getMaterialCustItems();
+
+    $currentMaterialCust = promise;
+    promise.then((data) => {
+      $itemsForSearchForm = data;
+      information = data;
+    });
   });
 </script>
 
@@ -28,16 +42,18 @@
   </div>
   <hr class="my-3 opacity-30" />
   <main bind:this={parent} class="grid grid-cols-12 gap-2">
-    <div class="col-span-8 overflow-y-auto">
+    <div
+      class="xl:col-span-8 col-span-12 xl:order-first order-last overflow-y-auto xl:pr-4"
+    >
       {#await promise}
         <div class="flex items-center justify-center gap-2 xl:h-screen h-full">
           <Loading />
           <h1>Loading..</h1>
         </div>
-      {:then materials}
-        <div in:blur>
-          {#each materials as material}
-            <h1>{material.nama_barang}</h1>
+      {:then items}
+        <div>
+          {#each items as item}
+            <Card {item} />
           {/each}
         </div>
       {:catch err}
@@ -47,11 +63,15 @@
         </div>
       {/await}
     </div>
-    <div class="col-span-4">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus beatae
-      enim reprehenderit debitis omnis molestias assumenda, dolores pariatur
-      facilis consequuntur tenetur quidem inventore iusto eum ea repellat
-      incidunt! Numquam, officia.
+    <div class="xl:col-span-4 md:col-span-6 col-span-12">
+      <!-- {#await information}
+        <div class="flex items-center justify-center gap-2 xl:h-screen h-full">
+          <Loading />
+          <h1>Loading..</h1>
+        </div>
+      {:then info}
+      {/await} -->
+      <Information {information} />
     </div>
   </main>
 </div>

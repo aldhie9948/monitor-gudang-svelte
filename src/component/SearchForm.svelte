@@ -5,6 +5,7 @@
     keywordSearch,
     itemsForSearchForm,
     currentMaterialCust,
+    selectedCategory,
   } from "@lib/store";
   import {
     isIStokBarang,
@@ -12,35 +13,62 @@
     type IStokBarang,
     isIMaterialCust,
   } from "@lib/types";
+  import _ from "lodash";
 
   export let className: string;
 
-  function findKeyword<T>(items: T[], field: string): T[] {
-    return items.filter((item) =>
-      item[field].includes($keywordSearch.toLowerCase())
-    );
+  function findKeyword<T>(items: T[], fields: string | string[]): T[] {
+    const results = items.filter((item) => {
+      const regex = new RegExp($keywordSearch, "gi");
+      if (typeof fields === "string") return regex.test(item[fields]);
+      const isFoundArr = fields.map((field) => regex.test(item[field]));
+      return isFoundArr.includes(true);
+    });
+    return results;
   }
 
   function searchHandler() {
-    if (isIStokBarang($itemsForSearchForm[0])) {
-      $currentStockBarang = findKeyword(
-        <IStokBarang[]>$itemsForSearchForm,
-        "kode_barang"
-      );
-    } else if (isIMaterialCust($itemsForSearchForm[0])) {
-      $currentMaterialCust = findKeyword(
-        <IMaterialCust[]>$itemsForSearchForm,
-        "kode_barang"
-      );
+    switch ($selectedCategory.toLowerCase()) {
+      case "raw material":
+        $currentStockBarang = Promise.resolve(
+          findKeyword(<IStokBarang[]>$itemsForSearchForm, [
+            "kode_barang",
+            "nama_barang",
+          ])
+        );
+        break;
+
+      case "material cust":
+        $currentMaterialCust = Promise.resolve(
+          findKeyword(<IMaterialCust[]>$itemsForSearchForm, [
+            "kode_barang",
+            "nama_barang",
+          ])
+        );
+        break;
+
+      default:
+        break;
     }
   }
 
   function resetHandler() {
     $keywordSearch = "";
-    if (isIStokBarang($itemsForSearchForm[0])) {
-      $currentStockBarang = <IStokBarang[]>$itemsForSearchForm;
-    } else if (isIMaterialCust($itemsForSearchForm[0])) {
-      $currentMaterialCust = <IMaterialCust[]>$itemsForSearchForm;
+    switch ($selectedCategory.toLowerCase()) {
+      case "raw material":
+        $currentStockBarang = Promise.resolve(
+          <IStokBarang[]>$itemsForSearchForm
+        );
+        break;
+
+      case "material cust":
+        $currentMaterialCust = Promise.resolve(
+          <IMaterialCust[]>$itemsForSearchForm
+        );
+        break;
+
+      default:
+        break;
     }
   }
 </script>
@@ -58,7 +86,7 @@
     type="text"
     bind:value={$keywordSearch}
     class="w-full bg-slate-800 rounded-full px-4 xl:py-2 py-1.5 text-sm duration-200 placeholder:text-xs focus:bg-slate-900 xl:mb-2 xl:mx-0 mx-2"
-    placeholder="Kode barang"
+    placeholder="Kode atau nama barang.."
     required={true}
   />
   <div class="flex gap-2 items-center">

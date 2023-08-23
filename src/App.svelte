@@ -6,12 +6,12 @@
   import MaterialCust from "@route/MaterialCust.svelte";
   import Home from "@route/Home.svelte";
   let url = "";
-  let basepath = import.meta.env.DEV ? "/" : "/monitor-gudang";
+  let basepath = import.meta.env.VITE_BASEPATH;
 </script>
 
 <div class="xl:grid xl:grid-cols-12 h-screen xl:overflow-hidden">
   <Sidebar />
-  <div class="xl:col-span-10 xl:pt-0 md:pt-20">
+  <div class="xl:col-span-10 xl:pt-0 md:pt-16 pt-16">
     <Router {url} {basepath}>
       <Route path="/" component={Home} />
       <Route path="/raw-material" component={RawMaterial} />

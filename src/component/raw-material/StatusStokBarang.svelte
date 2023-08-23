@@ -1,13 +1,15 @@
 <script lang="ts">
   import { getRawMaterialStockByType } from "@lib/service";
   import getStatusStock from "@lib/statusStock";
-  import { currentTypeBarang } from "@lib/store";
-  import type { StatusStock, StokBarang } from "@lib/types";
+  import { currentTypeBarang, itemsForSearchForm } from "@lib/store";
+  import type { StatusStock, IStokBarang } from "@lib/types";
   import { cubicOut } from "svelte/easing";
   import { tweened } from "svelte/motion";
   import ProgressBar from "./ProgressBar.svelte";
+  import Icon from "@iconify/svelte";
+  import { onMount } from "svelte";
 
-  let stokBarang: StokBarang[] = [];
+  export let stokBarang: IStokBarang[] = [];
   const arrayStatus: StatusStock[] = [-1, 0, 1];
 
   function tweenedBuilder(value: number) {
@@ -32,21 +34,26 @@
     });
   }
 
-  $: getRawMaterialStockByType($currentTypeBarang?.kode).then(
-    (res) => (stokBarang = res)
-  );
+  $: stokBarang = <IStokBarang[]>$itemsForSearchForm;
+
+  // $: getRawMaterialStockByType($currentTypeBarang?.kode).then(
+  //   (res) => (stokBarang = res)
+  // );
 </script>
 
-<div class="rounded-lg bg-slate-900 2xl:p-7 p-5">
-  <h1 class="uppercase font-bold">Status Stok Barang</h1>
-  <hr class="border-slate-500/50 2xl:my-3 my-1" />
+<div class="rounded-lg bg-slate-900 2xl:p-7 p-5 subtle-shadow">
+  <div class="flex items-center gap-2">
+    <Icon icon="mdi:information" width="1.2rem" class="text-blue-500" />
+    <h1 class="font-bold">Status Stok Barang</h1>
+  </div>
+  <hr class="border-slate-500/50 2xl:my-3 my-2" />
   <div class="my-2">
     <h1 class="2xl:text-7xl text-6xl font-bold">{stokBarang.length}</h1>
     <h2 class="font-semibold">Total Barang</h2>
   </div>
   <hr class="border-slate-500/50 2xl:my-3 my-1" />
   <h1 class="text-xs mb-2">Label :</h1>
-  <div class="flex items-center gap-2 2xl:mb-3 mb-1">
+  <div class="flex flex-wrap items-center gap-2 2xl:mb-3 mb-1">
     {#each arrayStatus as status (status)}
       <div
         class="flex items-center gap-1 px-3 rounded-full text-xs 2xl:py-1 py-0.5 mb-2"
