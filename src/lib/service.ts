@@ -1,95 +1,77 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import type {
-  IHistoriStokBarang,
-  IStokBarang,
-  ITypeBarang,
   IDetailTransactionParams,
-  IMaterialCust,
-  IBomAllLevel1,
+  IMaterialCustItem,
+  IRawMaterialItem,
+  IRawMaterialPartItems,
+  IRawMaterialTransaction,
+  IRawMaterialType,
 } from "./types";
 const ENDPOINT = import.meta.env.VITE_ENDPOINT;
+
+function axiosErrorHandler(error: unknown) {
+  let message = "";
+  if (error instanceof AxiosError) {
+    message = error.response?.data.error;
+    console.log(message);
+  }
+  return message;
+}
 
 /**
  * Service Raw Material
  * */
 
-export async function getTypeBarang(): Promise<ITypeBarang[]> {
+export async function getRawMaterialTypes(): Promise<IRawMaterialType[]> {
   try {
-    const {
-      data: { status, data },
-    } = await axios.get(`${ENDPOINT}/raw-material/tipe-barang`);
-    if (status === "ERR") throw new Error(data);
+    const { data } = await axios.get(`${ENDPOINT}/raw-material/items-type`);
     return data;
   } catch (err) {
-    if (err instanceof Error) {
-      console.error(err.message);
-      return Promise.reject(err.message);
-    }
+    axiosErrorHandler(err);
+    return [];
   }
 }
 
-export async function getRawMaterialStockByType(
-  type?: string
-): Promise<IStokBarang[]> {
+export async function getRawMaterialItemsByType(
+  type: string
+): Promise<IRawMaterialItem[]> {
   try {
-    if (type === undefined) throw new Error("Tipe barang tidak boleh kosong");
-    const params = new URLSearchParams({
-      type,
-    });
-    const {
-      data: { data, status },
-    } = await axios.get(`${ENDPOINT}/raw-material?${params.toString()}`);
-    if (status === "ERR") throw new Error(data);
+    const { data } = await axios.get(ENDPOINT + "/raw-material/" + type);
     return data;
   } catch (err) {
-    if (err instanceof Error) {
-      console.error(err.message);
-      return Promise.reject(err.message);
-    }
+    axiosErrorHandler(err);
+    return [];
   }
 }
 
-export async function getRawMaterialDetailTransaction(
-  args?: IDetailTransactionParams
-): Promise<IHistoriStokBarang[]> {
+export async function getRawMaterialTransactions(
+  args: IDetailTransactionParams
+): Promise<IRawMaterialTransaction[]> {
   try {
-    if (args === undefined) throw new Error("Invalid arguments");
-    const {
-      data: { data, status, record },
-    } = await axios.post(ENDPOINT + "/raw-material", args);
-    if (!Array.isArray(data) || status === "ERR") throw new Error(data);
-    if (data.length === 0 && record === 0)
-      throw new Error("Transaksi kosong atau tidak ditemukan");
+    const { data } = await axios.post(ENDPOINT + "/raw-material", args);
     return data;
   } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-      return Promise.reject(error.message);
-    }
+    axiosErrorHandler(error);
+    return [];
   }
 }
 
 export async function getRawMaterialLatestTransaction(
-  kode: string,
+  code: string,
   limit: number
-): Promise<IHistoriStokBarang[]> {
+): Promise<IRawMaterialTransaction[]> {
   try {
     const params = new URLSearchParams({
-      kode,
+      code,
       limit: String(limit),
     });
-    const {
-      data: { data, status },
-    } = await axios.get(
-      ENDPOINT + "/raw-material/terbaru?" + params.toString()
+    const { data } = await axios.get(
+      ENDPOINT + "/raw-material/latest?" + params.toString()
     );
-    if (status === "Err") throw new Error(data);
     return data;
   } catch (err) {
-    if (err instanceof Error) {
-      console.error(err.message);
-      return Promise.reject(err.message);
-    }
+    axiosErrorHandler(err);
+    return [];
   }
 }
 
@@ -97,22 +79,13 @@ export async function getRawMaterialLatestTransaction(
  * Service Material Customer
  * */
 
-export async function getMaterialCustItems(): Promise<IMaterialCust[]> {
+export async function getMaterialCustItems(): Promise<IMaterialCustItem[]> {
   try {
-    const {
-      data: { data, status },
-    } = await (<
-      Promise<{
-        data: { data: IMaterialCust[]; status: string; record: number };
-      }>
-    >axios.get(ENDPOINT + "/material-cust"));
-    if (status === "OK") return data;
-    if (!Array.isArray(data)) throw new Error(data);
+    const { data } = await axios.get(ENDPOINT + "/material-cust");
+    return data;
   } catch (err) {
-    if (err instanceof Error) {
-      console.error(err.message);
-      return Promise.reject(err.message);
-    }
+    axiosErrorHandler(err);
+    return [];
   }
 }
 
@@ -120,23 +93,16 @@ export async function getMaterialCustItems(): Promise<IMaterialCust[]> {
  * Service Bom All Level 1
  * */
 
-export async function getBomAllLevel1(kode: string): Promise<IBomAllLevel1[]> {
+export async function getRawMaterialPartItems(
+  id: string
+): Promise<IRawMaterialPartItems[]> {
   try {
-    const {
-      data: { data, status, record },
-    } = await (<
-      Promise<{
-        data: { data: IBomAllLevel1[]; status: string; record: number };
-      }>
-    >axios.post(ENDPOINT + "/bom-all-level-1", { kode_barang: kode }));
-    if (data.length === 0 && record === 0)
-      throw new Error("Data kosong atau tidak ditemukan");
-    if (!Array.isArray(data) && status === "ERR") throw new Error(data);
+    const { data } = await axios.post(ENDPOINT + "/raw-material/part-items", {
+      id,
+    });
     return data;
   } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-      return Promise.reject(error.message);
-    }
+    axiosErrorHandler(error);
+    return [];
   }
 }

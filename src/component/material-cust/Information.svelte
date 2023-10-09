@@ -2,7 +2,9 @@
   import Icon from "@iconify/svelte";
   import type { IMaterialCust } from "@lib/types";
 
-  export let information: IMaterialCust[];
+  export let items: IMaterialCust[];
+  let item: IMaterialCust;
+  $: if (items.length > 0) item = items[0];
 </script>
 
 <div class="bg-slate-900 p-4 rounded-lg subtle-shadow">
@@ -13,7 +15,7 @@
   <hr class="opacity-30 my-2" />
   <div class="my-5">
     <h1 class="font-bold 2xl:text-7xl text-6xl">
-      {information?.length}
+      {items?.length}
     </h1>
     <h2>Total Barang</h2>
   </div>
@@ -26,17 +28,17 @@
     <tr>
       <td>Gudang</td>
       <td>:</td>
-      <td>{information[0]?.gudang}</td>
+      <td>{item?.gudang}</td>
     </tr>
     <tr>
       <td>Kategori</td>
       <td>:</td>
-      <td>{information[0]?.kategori}</td>
+      <td>{item?.kategori}</td>
     </tr>
     <tr>
       <td>Tipe Barang</td>
       <td>:</td>
-      <td>{information[0]?.tipe_barang}</td>
+      <td>{item?.tipe_barang}</td>
     </tr>
   </table>
 </div>

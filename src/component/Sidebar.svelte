@@ -1,49 +1,67 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import { navigate } from "svelte-routing";
+  import { Link, Router } from "svelte-routing";
   import { slide } from "svelte/transition";
-  import CategoryItems from "./CategoryItems.svelte";
-  import SearchForm from "./SearchForm.svelte";
-  import SidebarBrand from "./SidebarBrand.svelte";
+  import CategoryMenu from "./category-menu.svelte";
+  import SearchForm from "./search-form.svelte";
 
-  let categoryShown: boolean = false;
-  function close(event: CustomEvent) {
-    categoryShown = !categoryShown;
-    navigate(event.detail.pathname, { replace: true });
-  }
+  let show: boolean = false;
+  const items = [
+    "Raw Material",
+    "Press",
+    "Tooling",
+    "WIP",
+    "Finish Good",
+    "Material Cust",
+  ];
 </script>
 
 <!-- Sidebar -->
 <div
   class="col-span-2 bg-slate-700 2xl:p-7 p-5 border-r border-slate-600 xl:block hidden"
 >
-  <SidebarBrand />
+  <div class="mb-24">
+    <h2 class="font-light text-sm">Aplikasi</h2>
+    <h1 class="text-lg font-bold">Monitor Gudang</h1>
+  </div>
   <SearchForm className="mb-10" />
-  <CategoryItems on:close={close} />
+  <Router>
+    <div class="xl:flex hidden items-center gap-2 mb-2">
+      <Icon icon="iconamoon:category-light" />
+      <h1 class="font-semibold">Kategori</h1>
+    </div>
+    {#each items as item}
+      <Link let:active to={"/" + item.toLowerCase().replace(" ", "-")}>
+        <CategoryMenu {active} {item} />
+      </Link>
+    {/each}
+  </Router>
 </div>
 <!-- End of  Sidebar -->
 
 <!-- Mobile Navbar -->
 <div
-  class="bg-slate-700 px-7 py-3 flex items-center justify-between fixed top-0 inset-x-0 z-10 xl:hidden gap-2 shadow-sidebar"
+  class="bg-slate-700 xl:px-7 px-3 py-3 flex items-center justify-between fixed top-0 inset-x-0 z-10 xl:hidden gap-2 shadow-sidebar"
 >
   <Icon icon="material-symbols:warehouse-outline" class="text-3xl" />
   <h1 class="sm:block hidden font-bold">Monitor Gudang</h1>
   <SearchForm className="flex items-center flex-grow" />
   <div class="relative">
-    <button
-      on:click={() => (categoryShown = !categoryShown)}
-      title="Kategori"
-      class="btn"
-    >
+    <button on:click={() => (show = !show)} title="Kategori" class="btn">
       <Icon icon="pepicons-pop:label" class="xl:text-sm text-base" />
     </button>
-    {#if categoryShown}
+    {#if show}
       <div
         transition:slide
         class="absolute bg-slate-500 whitespace-nowrap right-0 top-10 p-3 rounded"
       >
-        <CategoryItems on:close={close} />
+        <Router>
+          {#each items as item}
+            <Link let:active to={"/" + item.toLowerCase().replace(" ", "-")}>
+              <CategoryMenu {active} {item} />
+            </Link>
+          {/each}
+        </Router>
       </div>
     {/if}
   </div>

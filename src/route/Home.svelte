@@ -1,5 +1,5 @@
 <script>
-  import Loading from "@component/Loading.svelte";
+  import Loading from "@component/loading.svelte";
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
 

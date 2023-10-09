@@ -1,90 +1,87 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
   import {
-    getBomAllLevel1,
-    getRawMaterialDetailTransaction,
+    getRawMaterialPartItems,
+    getRawMaterialTransactions,
   } from "@lib/service";
-  import getStatusStock from "@lib/statusStock";
-  import utcTimeConverter from "@lib/timeConverter";
+  import { getItemStatusCode } from "@lib/status-code";
+  import utcTimeConverter from "@lib/time-converter";
   import type {
-    IBomAllLevel1,
-    IHistoriStokBarang,
-    IStokBarang,
+    IRawMaterialItem,
+    IRawMaterialPartItems,
+    IRawMaterialTransaction,
   } from "@lib/types";
   import moment from "moment";
   import { slide } from "svelte/transition";
-  import Loading from "../Loading.svelte";
-  import PartItemsV2 from "./PartItemsV2.svelte";
+  import PartItemsV2 from "./part-items-v2.svelte";
 
-  export let stock: IStokBarang;
-  let pagesSize: number = 3;
-  let detailTransaction: Promise<IHistoriStokBarang[]> = Promise.resolve([]);
-  let bomAllLevel1: Promise<IBomAllLevel1[]> = Promise.resolve([]);
+  export let item: IRawMaterialItem;
+  let transactions: IRawMaterialTransaction[] = [];
+  let partItems: IRawMaterialPartItems[] = [];
   let start: string = moment().startOf("month").format("YYYY-MM-DD");
   let end: string = moment().endOf("month").format("YYYY-MM-DD");
 
-  let isDetailShown = false;
+  let show = false;
 
-  function fetchDetailTransaction() {
-    const { kode_barang: kode } = stock;
+  async function getTransactions() {
+    const { kode_barang: code } = item;
     const args = {
       start: moment(start).startOf("day").toISOString(),
       end: moment(end).endOf("day").toISOString(),
-      kode,
+      code,
     };
-
-    detailTransaction = getRawMaterialDetailTransaction(args);
+    transactions = await getRawMaterialTransactions(args);
   }
 
-  function fetchBomAllLevel1() {
-    const kode = stock.kode_barang;
-    bomAllLevel1 = getBomAllLevel1(kode);
+  async function getPartItems() {
+    const kode = item.kode_barang;
+    partItems = await getRawMaterialPartItems(kode);
   }
 
-  function detailShownHandler() {
-    if (isDetailShown) return (isDetailShown = !isDetailShown);
-    fetchDetailTransaction();
-    fetchBomAllLevel1();
-    isDetailShown = !isDetailShown;
+  async function toggleShow() {
+    if (show) return (show = !show);
+    await getTransactions();
+    await getPartItems();
+    show = !show;
   }
 </script>
 
 <div
-  class="bg-slate-700 mb-2 rounded w-full 2xl:py-3 py-2 px-4 cursor-pointer snap-start subtle-shadow"
+  class="bg-slate-700 mb-3 rounded w-full 2xl:py-3 py-2 px-4 cursor-pointer subtle-shadow"
 >
   <!-- Header Card -->
   <button
-    on:click={detailShownHandler}
+    on:click={toggleShow}
     class="w-full text-left flex items-center gap-3 justify-between"
   >
     <div>
-      {#if getStatusStock(stock.stok) === -1}
+      {#if getItemStatusCode(item.stok) === -1}
         <Icon icon="mdi:error" class="text-red-400 icon-raw-material" />
-      {:else if getStatusStock(stock.stok) === 0}
+      {:else if getItemStatusCode(item.stok) === 0}
         <Icon icon="mdi:alert" class="text-yellow-300 icon-raw-material" />
-      {:else if getStatusStock(stock.stok) === 1}
+      {:else if getItemStatusCode(item.stok) === 1}
         <Icon icon="mdi:alert-box" class="text-green-500 icon-raw-material" />
       {/if}
     </div>
     <div class="flex-grow">
       <h2 class="opacity-50 text-xs font-light -mb-0.5">Kode Barang :</h2>
-      <h1 class="font-bold 2xl:text-lg mb-1">{stock.nama_barang}</h1>
+      <h1 class="font-bold 2xl:text-lg mb-1">{item.nama_barang}</h1>
       <h2 class="font-light text-xs opacity-50 -mb-0.5">Kode Barang:</h2>
       <h1 class="font-bold tracking-widest">
-        {stock.kode_barang}
+        {item.kode_barang}
       </h1>
     </div>
     <div class="text-right">
       <h1 class="font-bold 2xl:text-lg text-base">
-        {stock.stok}
-        <sup class="uppercase text-xs">{stock.satuan || "-"}</sup>
+        {item.stok}
+        <sup class="uppercase text-xs">{item.satuan || "-"}</sup>
       </h1>
       <h2 class="font-light text-xs md:block hidden">
-        {stock.gudang || "-"}
+        {item.gudang || "-"}
       </h2>
     </div>
     <div>
-      {#if isDetailShown}
+      {#if show}
         <Icon icon="fa-regular:times-circle" class="text-2xl" />
       {:else}
         <Icon icon="gg:chevron-down-o" class="text-2xl" />
@@ -94,25 +91,9 @@
   <!-- End of Header Card -->
 
   <!-- Detail Card -->
-  {#if isDetailShown}
+  {#if show}
     <div class="my-5" transition:slide>
-      <!-- Bom All Level 1 -->
-      <div class="mb-5">
-        {#await bomAllLevel1}
-          <div class="flex justify-center items-center">
-            <Loading />
-          </div>
-        {:then items}
-          <!-- <PartItems {items} /> -->
-          <PartItemsV2 {items} />
-        {:catch err}
-          <div class="flex gap-2 items-center justify-center my-5">
-            <Icon icon="mdi:info" class="text-base" />
-            <h1 class="italic opacity-80">{err}</h1>
-          </div>
-        {/await}
-      </div>
-      <!-- End of Bom All Level 1 -->
+      <PartItemsV2 items={partItems} />
 
       <!-- Date Filter -->
       <div
@@ -135,7 +116,7 @@
           />
         </div>
         <button
-          on:click={fetchDetailTransaction}
+          on:click={getTransactions}
           title="Cari transaksi"
           class="btn xl:mt-4 flex items-center gap-2 !px-10 flex-shrink-0"
         >
@@ -145,11 +126,7 @@
       </div>
       <!-- End of Date Filter -->
 
-      {#await detailTransaction}
-        <div class="flex justify-center items-center">
-          <Loading />
-        </div>
-      {:then transaction}
+      {#if transactions.length > 0}
         <div class="overflow-x-auto">
           <table class="w-full">
             <thead>
@@ -164,46 +141,52 @@
               </tr>
             </thead>
             <tbody>
-              {#each transaction as item, i (i)}
+              {#each transactions as transaction, i (i)}
                 <tr class="text-center">
                   <td>{i + 1}</td>
                   <td
                     ><h1>
-                      {utcTimeConverter(item.tanggal, "DD/MM/YYYY")}
+                      {utcTimeConverter(transaction.tanggal, "DD/MM/YYYY")}
                     </h1></td
                   >
-                  <td><h1>{item.sisa_stok}</h1></td>
-                  <td class:stokMasuk={parseFloat(item.masuk) > 0}
+                  <td><h1>{transaction.sisa_stok}</h1></td>
+                  <td class:stokMasuk={parseFloat(transaction.masuk) > 0}
                     ><h1>
-                      {parseFloat(item.masuk) < 1 ? "-" : item.masuk}
+                      {parseFloat(transaction.masuk) < 1
+                        ? "-"
+                        : transaction.masuk}
                     </h1></td
                   >
-                  <td class:stokKeluar={parseFloat(item.keluar) > 0}
+                  <td class:stokKeluar={parseFloat(transaction.keluar) > 0}
                     ><h1>
-                      {parseFloat(item.keluar) < 1 ? "-" : item.keluar}
+                      {parseFloat(transaction.keluar) < 1
+                        ? "-"
+                        : transaction.keluar}
                     </h1></td
                   >
                   <td
                     ><h1>
                       {(
-                        parseFloat(item.sisa_stok) +
-                        parseFloat(item.masuk) -
-                        parseFloat(item.keluar)
+                        parseFloat(transaction.sisa_stok) +
+                        parseFloat(transaction.masuk) -
+                        parseFloat(transaction.keluar)
                       ).toFixed(2)}
                     </h1></td
                   >
-                  <td><h1>{item.no_lot}</h1></td>
+                  <td><h1>{transaction.no_lot}</h1></td>
                 </tr>
               {/each}
             </tbody>
           </table>
         </div>
-      {:catch err}
+      {:else}
         <div class="flex items-center justify-center gap-2 my-5">
           <Icon icon="mdi:info" class="text-base" />
-          <h1 class="italic opacity-80">{err}</h1>
+          <h1 class="italic opacity-80">
+            Tidak ada atau transaksi tidak ditemukan
+          </h1>
         </div>
-      {/await}
+      {/if}
     </div>
   {/if}
   <!-- End of Detail Card -->

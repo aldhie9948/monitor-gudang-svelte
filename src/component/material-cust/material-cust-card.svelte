@@ -1,16 +1,17 @@
 <script lang="ts">
-  import Loading from "@component/Loading.svelte";
+  import Loading from "@component/loading.svelte";
   import Icon from "@iconify/svelte";
   import generateQRCode from "@lib/qrcode";
+  import { getItemStatusCode } from "@lib/status-code";
   import type { IMaterialCust } from "@lib/types";
   import { slide } from "svelte/transition";
 
   export let item: IMaterialCust;
-  let bodyShown: boolean = false;
+  let show: boolean = false;
   let qrcode = generateQRCode(item.qrcode);
 
   function openCard() {
-    bodyShown = !bodyShown;
+    show = !show;
   }
 </script>
 
@@ -31,15 +32,15 @@
     <div class="text-right">
       <div class="flex items-center justify-end gap-2">
         <span
-          class:dangerDot={Number(item.stok) <= 10}
-          class:warningDot={Number(item.stok) > 10 && Number(item.stok) <= 100}
-          class:safeDot={Number(item.stok) >= 100}
+          class:dangerDot={getItemStatusCode(item.stok) === -1}
+          class:warningDot={getItemStatusCode(item.stok) === 0}
+          class:safeDot={getItemStatusCode(item.stok) === 1}
           class="w-2 h-2 ring rounded-full animate-pulse"
         />
         <h1
-          class:dangerText={Number(item.stok) <= 10}
-          class:warningText={Number(item.stok) > 10 && Number(item.stok) <= 100}
-          class:safeText={Number(item.stok) >= 100}
+          class:dangerText={getItemStatusCode(item.stok) === -1}
+          class:warningText={getItemStatusCode(item.stok) === 0}
+          class:safeText={getItemStatusCode(item.stok) === 1}
           class="text-lg text-red-500 font-bold"
         >
           {item.stok}
@@ -47,21 +48,21 @@
       </div>
       <h1 class="text-xs">{item.gudang}</h1>
     </div>
-    {#if bodyShown}
+    {#if show}
       <Icon icon="mdi:chevron-up" class="text-3xl" />
     {:else}
       <Icon icon="mdi:chevron-down" class="text-3xl" />
     {/if}
   </button>
-  {#if bodyShown}
+  {#if show}
     <div class="grid md:grid-cols-12 grid-cols-1 my-4" transition:slide>
       {#await qrcode}
         <div class="flex items-center justify-center h-full col-span-4">
           <Loading />
         </div>
-      {:then qr}
+      {:then src}
         <img
-          src={qr}
+          {src}
           alt={item.qrcode}
           class="col-span-4 mx-auto rounded subtle-shadow self-center"
         />

@@ -1,17 +1,17 @@
 <script lang="ts">
-  import RawMaterial from "@route/RawMaterial.svelte";
+  import Home from "@route/home.svelte";
+  import MaterialCust from "@route/material-cust.svelte";
+  import NotFound from "@route/not-found.svelte";
+  import RawMaterial from "@route/raw-material.svelte";
   import { Route, Router } from "svelte-routing";
-  import Sidebar from "./component/Sidebar.svelte";
-  import NotFound from "@route/NotFound.svelte";
-  import MaterialCust from "@route/MaterialCust.svelte";
-  import Home from "@route/Home.svelte";
+  import Sidebar from "./component/sidebar.svelte";
   let url = "";
   let basepath = import.meta.env.VITE_BASEPATH;
 </script>
 
 <div class="xl:grid xl:grid-cols-12 h-screen xl:overflow-hidden">
   <Sidebar />
-  <div class="xl:col-span-10 xl:pt-0 md:pt-16 pt-16">
+  <div class="xl:col-span-10 xl:pt-0 md:pt-16 pt-16 overflow-auto">
     <Router {url} {basepath}>
       <Route path="/" component={Home} />
       <Route path="/raw-material" component={RawMaterial} />
