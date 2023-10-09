@@ -3,10 +3,10 @@
   import Icon from "@iconify/svelte";
   import generateQRCode from "@lib/qrcode";
   import { getItemStatusCode } from "@lib/status-code";
-  import type { IMaterialCust } from "@lib/types";
+  import type { IMaterialCustItem } from "@lib/types";
   import { slide } from "svelte/transition";
 
-  export let item: IMaterialCust;
+  export let item: IMaterialCustItem;
   let show: boolean = false;
   let qrcode = generateQRCode(item.qrcode);
 

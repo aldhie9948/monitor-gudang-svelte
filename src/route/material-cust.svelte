@@ -3,7 +3,7 @@
   import MaterialCustCard from "@component/material-cust/material-cust-card.svelte";
   import Icon from "@iconify/svelte";
   import { getMaterialCustItems } from "@lib/service";
-  import { category } from "@lib/store";
+  import { category, materialCustItems } from "@lib/store";
   import type { IMaterialCustItem } from "@lib/types";
   import { onMount } from "svelte";
 
@@ -12,9 +12,8 @@
 
   onMount(async () => {
     items = await getMaterialCustItems();
+    $materialCustItems = items;
   });
-
-  $: console.log($category);
 </script>
 
 <div class="px-7 xl:py-7 py-0 flex flex-col h-screen">
@@ -29,11 +28,11 @@
     </div>
   </div>
   <hr class="my-3 opacity-30" />
-  <main bind:this={parent} class="grid grid-cols-12 gap-4">
+  <main bind:this={parent} class="grid grid-cols-12 gap-4 overflow-hidden">
     <div
       class="xl:col-span-8 col-span-12 xl:order-first order-last overflow-y-auto"
     >
-      {#each items as item, i (i)}
+      {#each $materialCustItems as item, i (i)}
         <MaterialCustCard {item} />
       {/each}
     </div>

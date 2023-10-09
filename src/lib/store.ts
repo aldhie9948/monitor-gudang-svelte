@@ -1,5 +1,9 @@
 import { writable } from "svelte/store";
-import type { IRawMaterialItem, IRawMaterialType } from "@lib/types";
+import type {
+  IMaterialCustItem,
+  IRawMaterialItem,
+  IRawMaterialType,
+} from "@lib/types";
 export const categoryItems = writable<string[]>([
   "Raw Material",
   "Press",
@@ -13,3 +17,4 @@ export const categoryItems = writable<string[]>([
 export const rawMaterialItems = writable<IRawMaterialItem[]>([]);
 export const rawMaterialType = writable<IRawMaterialType>();
 export const category = writable<string>();
+export const materialCustItems = writable<IMaterialCustItem[]>([]);

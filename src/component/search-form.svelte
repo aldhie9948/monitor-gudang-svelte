@@ -1,7 +1,15 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import { getRawMaterialItemsByType } from "@lib/service";
-  import { category, rawMaterialItems, rawMaterialType } from "@lib/store";
+  import {
+    getMaterialCustItems,
+    getRawMaterialItemsByType,
+  } from "@lib/service";
+  import {
+    category,
+    materialCustItems,
+    rawMaterialItems,
+    rawMaterialType,
+  } from "@lib/store";
 
   export let className: string;
   let keyword: string = "";
@@ -13,10 +21,17 @@
   }
 
   async function search() {
+    console.log($category);
+
     if ($category === "raw-material") {
       const { kode } = $rawMaterialType;
       const items = await getRawMaterialItemsByType(kode);
       $rawMaterialItems = items.filter((i) =>
+        filter(i, keyword, ["kode_barang", "nama_barang"])
+      );
+    } else if ($category === "material-cust") {
+      const items = await getMaterialCustItems();
+      $materialCustItems = items.filter((i) =>
         filter(i, keyword, ["kode_barang", "nama_barang"])
       );
     }
@@ -26,6 +41,8 @@
     if ($category === "raw-material") {
       const { kode } = $rawMaterialType;
       $rawMaterialItems = await getRawMaterialItemsByType(kode);
+    } else if ($category === "material-cust") {
+      $materialCustItems = await getMaterialCustItems();
     }
     keyword = "";
   }
