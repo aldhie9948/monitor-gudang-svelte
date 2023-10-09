@@ -47,12 +47,12 @@
 </script>
 
 <div
-  class="bg-slate-700 mb-3 rounded w-full 2xl:py-3 py-2 px-4 cursor-pointer subtle-shadow"
+  class="bg-slate-700 rounded w-full 2xl:py-3 py-2 md:px-4 px-2 cursor-pointer subtle-shadow snap-start"
 >
   <!-- Header Card -->
   <button
     on:click={toggleShow}
-    class="w-full text-left flex items-center gap-3 justify-between"
+    class="w-full text-left flex items-center md:gap-3 gap-2 justify-between"
   >
     <div>
       {#if getItemStatusCode(item.stok) === -1}
@@ -63,22 +63,22 @@
         <Icon icon="mdi:alert-box" class="text-green-500 icon-raw-material" />
       {/if}
     </div>
-    <div class="flex-grow">
+    <div class="flex-grow overflow-hidden">
       <h2 class="opacity-50 text-xs font-light -mb-0.5">Kode Barang :</h2>
-      <h1 class="font-bold 2xl:text-lg mb-1">{item.nama_barang}</h1>
+      <h1 class="font-bold 2xl:text-lg mb-1 truncate">{item.nama_barang}</h1>
       <h2 class="font-light text-xs opacity-50 -mb-0.5">Kode Barang:</h2>
       <h1 class="font-bold tracking-widest">
         {item.kode_barang}
       </h1>
     </div>
     <div class="text-right">
-      <h1 class="font-bold 2xl:text-lg text-base">
+      <p class="font-bold 2xl:text-lg text-base">
         {item.stok}
         <sup class="uppercase text-xs">{item.satuan || "-"}</sup>
-      </h1>
-      <h2 class="font-light text-xs md:block hidden">
+      </p>
+      <p class="font-light text-xs">
         {item.gudang || "-"}
-      </h2>
+      </p>
     </div>
     <div>
       {#if show}

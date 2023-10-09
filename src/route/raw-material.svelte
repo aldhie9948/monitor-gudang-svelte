@@ -24,7 +24,9 @@
   });
 </script>
 
-<div class="sm:px-7 px-3 xl:py-3 flex flex-col overflow-hidden h-screen">
+<div
+  class="sm:px-7 px-3 xl:py-3 flex flex-col overflow-hidden xl:h-screen md:h-[93vh]"
+>
   <div class="border-b-2 border-slate-500/20 mb-3">
     <div class="flex justify-around flex-wrap">
       {#each itemsType as type}
@@ -42,13 +44,15 @@
       {/each}
     </div>
   </div>
-  <div class="grid grid-cols-12 gap-4 overflow-hidden">
-    <div class="col-span-8 overflow-auto">
+  <div class="grid xl:grid-cols-12 grid-cols-1 gap-4 overflow-hidden">
+    <div
+      class="xl:col-span-8 overflow-auto xl:order-first order-last grid grid-cols-1 gap-3 snap-both"
+    >
       {#each $rawMaterialItems as item, i (i)}
         <RawMaterialCard {item} />
       {/each}
     </div>
-    <div class="col-span-4">
+    <div class="xl:col-span-4">
       <SidebarInfo itemType={$rawMaterialType} {items} />
     </div>
   </div>

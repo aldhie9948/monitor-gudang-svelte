@@ -1,13 +1,15 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import type { IMaterialCust } from "@lib/types";
+  import type { IMaterialCustItem } from "@lib/types";
 
-  export let items: IMaterialCust[];
-  let item: IMaterialCust;
+  export let items: IMaterialCustItem[];
+  let item: IMaterialCustItem;
   $: if (items.length > 0) item = items[0];
 </script>
 
-<div class="bg-slate-900 p-4 rounded-lg subtle-shadow">
+<div
+  class="bg-slate-900 p-4 rounded-lg subtle-shadow xl:w-full md:w-1/2 w-full"
+>
   <div class="flex items-center gap-2">
     <Icon icon="mdi:information" width="1.5rem" class="text-blue-500" />
     <h1 class="font-bold">Information</h1>

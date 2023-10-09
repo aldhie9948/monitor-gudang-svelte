@@ -13,6 +13,7 @@
 
   export let className: string;
   let keyword: string = "";
+  let placeholder: any[] = [];
 
   function filter<T>(item: T, keyword: string, index: string[]) {
     return index
@@ -21,16 +22,16 @@
   }
 
   async function search() {
-    console.log($category);
-
     if ($category === "raw-material") {
       const { kode } = $rawMaterialType;
       const items = await getRawMaterialItemsByType(kode);
+      placeholder = items;
       $rawMaterialItems = items.filter((i) =>
         filter(i, keyword, ["kode_barang", "nama_barang"])
       );
     } else if ($category === "material-cust") {
       const items = await getMaterialCustItems();
+      placeholder = items;
       $materialCustItems = items.filter((i) =>
         filter(i, keyword, ["kode_barang", "nama_barang"])
       );
@@ -38,11 +39,11 @@
   }
 
   async function reset() {
+    if (!keyword) return;
     if ($category === "raw-material") {
-      const { kode } = $rawMaterialType;
-      $rawMaterialItems = await getRawMaterialItemsByType(kode);
+      $rawMaterialItems = placeholder;
     } else if ($category === "material-cust") {
-      $materialCustItems = await getMaterialCustItems();
+      $materialCustItems = placeholder;
     }
     keyword = "";
   }

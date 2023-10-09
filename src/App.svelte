@@ -9,7 +9,7 @@
   let basepath = import.meta.env.VITE_BASEPATH;
 </script>
 
-<div class="xl:grid xl:grid-cols-12 h-screen xl:overflow-hidden">
+<div class="xl:grid xl:grid-cols-12 sm:h-screen xl:overflow-hidden">
   <Sidebar />
   <div class="xl:col-span-10 xl:pt-0 md:pt-16 pt-16 overflow-auto">
     <Router {url} {basepath}>

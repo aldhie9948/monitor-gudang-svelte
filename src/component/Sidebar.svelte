@@ -14,6 +14,9 @@
     "Finish Good",
     "Material Cust",
   ];
+  function toggleShow() {
+    if (show) show = !show;
+  }
 </script>
 
 <!-- Sidebar -->
@@ -57,7 +60,11 @@
       >
         <Router>
           {#each items as item}
-            <Link let:active to={"/" + item.toLowerCase().replace(" ", "-")}>
+            <Link
+              on:click={toggleShow}
+              let:active
+              to={"/" + item.toLowerCase().replace(" ", "-")}
+            >
               <CategoryMenu {active} {item} />
             </Link>
           {/each}

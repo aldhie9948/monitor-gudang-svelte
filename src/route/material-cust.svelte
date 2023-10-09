@@ -3,12 +3,11 @@
   import MaterialCustCard from "@component/material-cust/material-cust-card.svelte";
   import Icon from "@iconify/svelte";
   import { getMaterialCustItems } from "@lib/service";
-  import { category, materialCustItems } from "@lib/store";
+  import { materialCustItems } from "@lib/store";
   import type { IMaterialCustItem } from "@lib/types";
   import { onMount } from "svelte";
 
   let items: IMaterialCustItem[] = [];
-  let parent: HTMLElement;
 
   onMount(async () => {
     items = await getMaterialCustItems();
@@ -16,7 +15,7 @@
   });
 </script>
 
-<div class="px-7 xl:py-7 py-0 flex flex-col h-screen">
+<div class="px-7 xl:py-7 py-0 flex flex-col xl:h-screen md:h-[93vh]">
   <div class="flex gap-2 items-center">
     <Icon icon="solar:box-bold" width="3rem" class="text-red-500" />
     <div>
@@ -28,15 +27,17 @@
     </div>
   </div>
   <hr class="my-3 opacity-30" />
-  <main bind:this={parent} class="grid grid-cols-12 gap-4 overflow-hidden">
+  <main
+    class="grid xl:grid-cols-12 grid-cols-1 gap-4 overflow-hidden flex-grow"
+  >
     <div
-      class="xl:col-span-8 col-span-12 xl:order-first order-last overflow-y-auto"
+      class="xl:col-span-8 xl:order-first order-last overflow-auto grid grid-cols-1 gap-4"
     >
       {#each $materialCustItems as item, i (i)}
         <MaterialCustCard {item} />
       {/each}
     </div>
-    <div class="xl:col-span-4 md:col-span-6 col-span-12">
+    <div class="xl:col-span-4">
       <Information {items} />
     </div>
   </main>

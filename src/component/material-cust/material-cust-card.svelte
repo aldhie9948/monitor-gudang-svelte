@@ -15,7 +15,7 @@
   }
 </script>
 
-<div class="bg-slate-700 subtle-shadow px-4 py-3 rounded mb-4">
+<div class="bg-slate-700 subtle-shadow px-4 py-3 rounded">
   <button
     on:click={openCard}
     class="flex items-center gap-4 cursor-pointer w-full text-left"
