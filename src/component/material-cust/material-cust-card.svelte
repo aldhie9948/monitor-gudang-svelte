@@ -101,7 +101,7 @@
   {/if}
 </div>
 
-<style>
+<style lang="scss">
   .dangerText {
     @apply text-red-500;
   }
