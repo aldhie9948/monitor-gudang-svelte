@@ -24,6 +24,10 @@
   });
 </script>
 
+<svelte:head>
+  <title>Raw Material - Monitor Gudang MMS</title>
+</svelte:head>
+
 <div
   class="sm:px-7 px-3 xl:py-3 flex flex-col overflow-hidden xl:h-screen md:h-[93vh]"
 >

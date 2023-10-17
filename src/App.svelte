@@ -9,6 +9,15 @@
   let basepath = import.meta.env.VITE_BASEPATH;
 </script>
 
+<svelte:head>
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+</svelte:head>
+
 <div class="xl:grid xl:grid-cols-12 sm:h-screen xl:overflow-hidden">
   <Sidebar />
   <div class="xl:col-span-10 xl:pt-0 md:pt-16 pt-16 overflow-auto">

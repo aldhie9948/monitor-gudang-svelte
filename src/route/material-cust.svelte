@@ -15,6 +15,10 @@
   });
 </script>
 
+<svelte:head>
+  <title>Material Customer - Monitor Gudang MMS</title>
+</svelte:head>
+
 <div class="px-7 xl:py-7 py-0 flex flex-col xl:h-screen md:h-[93vh]">
   <div class="flex gap-2 items-center">
     <Icon icon="solar:box-bold" width="3rem" class="text-red-500" />

@@ -2,6 +2,10 @@
   import Icon from "@iconify/svelte";
 </script>
 
+<svelte:head>
+  <title>Work In Progress - Monitor Gudang MMS</title>
+</svelte:head>
+
 <div
   class="flex items-center justify-center xl:text-5xl md:text-4xl text-3xl font-bold xl:h-full h-screen"
 >
