@@ -47,7 +47,7 @@
 </script>
 
 <div
-  class="bg-slate-700 rounded w-full 2xl:py-3 py-2 md:px-4 px-2 cursor-pointer subtle-shadow snap-start"
+  class="bg-slate-700 rounded w-full 2xl:py-3 py-2 md:px-4 px-2 cursor-pointer subtle-shadow"
 >
   <!-- Header Card -->
   <button

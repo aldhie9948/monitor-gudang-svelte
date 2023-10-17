@@ -46,7 +46,7 @@
   </div>
   <div class="grid xl:grid-cols-12 grid-cols-1 gap-4 overflow-hidden">
     <div
-      class="xl:col-span-8 overflow-auto xl:order-first order-last grid grid-cols-1 gap-3 snap-both"
+      class="xl:col-span-8 overflow-auto xl:order-first order-last flex flex-col gap-3"
     >
       {#each $rawMaterialItems as item, i (i)}
         <RawMaterialCard {item} />
