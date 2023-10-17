@@ -31,7 +31,7 @@
     class="grid xl:grid-cols-12 grid-cols-1 gap-4 overflow-hidden flex-grow"
   >
     <div
-      class="xl:col-span-8 xl:order-first order-last overflow-auto grid grid-cols-1 gap-4"
+      class="xl:col-span-8 xl:order-first order-last overflow-auto flex flex-col gap-4"
     >
       {#each $materialCustItems as item, i (i)}
         <MaterialCustCard {item} />
