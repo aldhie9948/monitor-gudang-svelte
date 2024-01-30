@@ -1,9 +1,13 @@
 <script lang="ts">
+  import Loading from "@component/loading.svelte";
   import Icon from "@iconify/svelte";
-  import type { IBomAllLevel1 } from "@lib/types";
-  export let items: IBomAllLevel1[];
+  import { getRawMaterialPartItems } from "@lib/service";
+  import type { IRawMaterialPartItems } from "@lib/types";
   let pagesSize: number = 3;
   let currentPage: number = 1;
+  export let itemId: string;
+  let items: IRawMaterialPartItems[] = [];
+  let loading: boolean = false;
 
   function paginateItems<T>(
     array: T[],
@@ -26,15 +30,32 @@
     }
   }
 
+  async function init(id: string) {
+    try {
+      loading = true;
+      const data = await getRawMaterialPartItems(id);
+      loading = false;
+      return data;
+    } catch (error) {
+      loading = false;
+    }
+  }
+
   let paginatedResult = paginateItems(items, pagesSize, currentPage);
 
   $: {
     paginatedResult = paginateItems(items, pagesSize, currentPage);
     currentPage = paginatedResult.currentPage;
   }
+  $: init(itemId).then((data) => (items = data));
 </script>
 
 <div class="mb-5">
+  {#if loading}
+    <div class="w-full flex items-center justify-center">
+      <Loading width="2rem" />
+    </div>
+  {/if}
   {#if items.length > 0}
     <div class="flex items-center justify-between mb-5">
       <div class="flex gap-2 items-center text-base justify-center flex-grow">

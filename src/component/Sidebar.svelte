@@ -17,6 +17,8 @@
   function toggleShow() {
     if (show) show = !show;
   }
+  const basepath = import.meta.env.VITE_BASEPATH;
+  const url = "";
 </script>
 
 <!-- Sidebar -->
@@ -28,13 +30,13 @@
     <h1 class="text-lg font-bold">Monitor Gudang</h1>
   </div>
   <SearchForm className="mb-10" />
-  <Router>
+  <Router {basepath} {url}>
     <div class="xl:flex hidden items-center gap-2 mb-2">
       <Icon icon="iconamoon:category-light" />
       <h1 class="font-semibold">Kategori</h1>
     </div>
     {#each items as item}
-      <Link let:active to={"/" + item.toLowerCase().replace(" ", "-")}>
+      <Link let:active to={item.toLowerCase().replace(" ", "-")}>
         <CategoryMenu {active} {item} />
       </Link>
     {/each}
@@ -58,7 +60,7 @@
         transition:slide
         class="absolute bg-slate-500 whitespace-nowrap right-0 top-10 p-3 rounded"
       >
-        <Router>
+        <Router {basepath} {url}>
           {#each items as item}
             <Link
               on:click={toggleShow}

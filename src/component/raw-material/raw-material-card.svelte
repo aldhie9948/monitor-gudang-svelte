@@ -14,12 +14,13 @@
   import moment from "moment";
   import { slide } from "svelte/transition";
   import PartItemsV2 from "./part-items-v2.svelte";
+  import Loading from "@component/loading.svelte";
 
   export let item: IRawMaterialItem;
-  let transactions: IRawMaterialTransaction[] = [];
-  let partItems: IRawMaterialPartItems[] = [];
   let start: string = moment().startOf("month").format("YYYY-MM-DD");
   let end: string = moment().endOf("month").format("YYYY-MM-DD");
+  let startISO: string = moment(start).startOf("day").toISOString();
+  let endISO: string = moment(end).endOf("day").toISOString();
 
   let show = false;
 
@@ -30,20 +31,16 @@
       end: moment(end).endOf("day").toISOString(),
       code,
     };
-    transactions = await getRawMaterialTransactions(args);
-  }
-
-  async function getPartItems() {
-    const kode = item.kode_barang;
-    partItems = await getRawMaterialPartItems(kode);
+    return await getRawMaterialTransactions(args);
   }
 
   async function toggleShow() {
     if (show) return (show = !show);
-    await getTransactions();
-    await getPartItems();
     show = !show;
   }
+
+  $: startISO = moment(start).startOf("day").toISOString();
+  $: endISO = moment(end).endOf("day").toISOString();
 </script>
 
 <div
@@ -93,7 +90,7 @@
   <!-- Detail Card -->
   {#if show}
     <div class="my-5" transition:slide>
-      <PartItemsV2 items={partItems} />
+      <PartItemsV2 itemId={item.kode_barang} />
 
       <!-- Date Filter -->
       <div
@@ -126,67 +123,73 @@
       </div>
       <!-- End of Date Filter -->
 
-      {#if transactions.length > 0}
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead>
-              <tr>
-                <th>No.</th>
-                <th>Tanggal</th>
-                <th>Stok Awal</th>
-                <th>In</th>
-                <th>Out</th>
-                <th>Stok Akhir</th>
-                <th>Lot Material</th>
-              </tr>
-            </thead>
-            <tbody>
-              {#each transactions as transaction, i (i)}
-                <tr class="text-center">
-                  <td>{i + 1}</td>
-                  <td
-                    ><h1>
-                      {utcTimeConverter(transaction.tanggal, "DD/MM/YYYY")}
-                    </h1></td
-                  >
-                  <td><h1>{transaction.sisa_stok}</h1></td>
-                  <td class:stokMasuk={parseFloat(transaction.masuk) > 0}
-                    ><h1>
-                      {parseFloat(transaction.masuk) < 1
-                        ? "-"
-                        : transaction.masuk}
-                    </h1></td
-                  >
-                  <td class:stokKeluar={parseFloat(transaction.keluar) > 0}
-                    ><h1>
-                      {parseFloat(transaction.keluar) < 1
-                        ? "-"
-                        : transaction.keluar}
-                    </h1></td
-                  >
-                  <td
-                    ><h1>
-                      {(
-                        parseFloat(transaction.sisa_stok) +
-                        parseFloat(transaction.masuk) -
-                        parseFloat(transaction.keluar)
-                      ).toFixed(2)}
-                    </h1></td
-                  >
-                  <td><h1>{transaction.no_lot}</h1></td>
+      {#await getRawMaterialTransactions( { start: startISO, end: endISO, code: item.kode_barang } )}
+        <div class="flex items-center justify-center">
+          <Loading width="2rem" />
+        </div>
+      {:then transactions}
+        {#if transactions.length > 0}
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Tanggal</th>
+                  <th>Stok Awal</th>
+                  <th>In</th>
+                  <th>Out</th>
+                  <th>Stok Akhir</th>
+                  <th>Lot Material</th>
                 </tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
-      {:else}
-        <div class="flex items-center justify-center gap-2 my-5">
-          <Icon icon="mdi:info" class="text-base" />
-          <h1 class="italic opacity-80">
-            Tidak ada atau transaksi tidak ditemukan
-          </h1>
-        </div>
-      {/if}
+              </thead>
+              <tbody>
+                {#each transactions as transaction, i (i)}
+                  <tr class="text-center">
+                    <td>{i + 1}</td>
+                    <td
+                      ><h1>
+                        {utcTimeConverter(transaction.tanggal, "DD/MM/YYYY")}
+                      </h1></td
+                    >
+                    <td><h1>{transaction.sisa_stok}</h1></td>
+                    <td class:stokMasuk={parseFloat(transaction.masuk) > 0}
+                      ><h1>
+                        {parseFloat(transaction.masuk) < 1
+                          ? "-"
+                          : transaction.masuk}
+                      </h1></td
+                    >
+                    <td class:stokKeluar={parseFloat(transaction.keluar) > 0}
+                      ><h1>
+                        {parseFloat(transaction.keluar) < 1
+                          ? "-"
+                          : transaction.keluar}
+                      </h1></td
+                    >
+                    <td
+                      ><h1>
+                        {(
+                          parseFloat(transaction.sisa_stok) +
+                          parseFloat(transaction.masuk) -
+                          parseFloat(transaction.keluar)
+                        ).toFixed(2)}
+                      </h1></td
+                    >
+                    <td><h1>{transaction.no_lot}</h1></td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </div>
+        {:else}
+          <div class="flex items-center justify-center gap-2 my-5">
+            <Icon icon="mdi:info" class="text-base" />
+            <h1 class="italic opacity-80">
+              Tidak ada atau transaksi tidak ditemukan
+            </h1>
+          </div>
+        {/if}
+      {/await}
     </div>
   {/if}
   <!-- End of Detail Card -->
